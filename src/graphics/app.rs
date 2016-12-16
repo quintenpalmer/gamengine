@@ -54,9 +54,7 @@ impl App {
             gl::ClearColor(0.9, 0.1, 0.2, 1.0);
             gl::Clear(gl::COLOR_BUFFER_BIT);
 
-            gl::DrawElements(gl::TRIANGLES, 6 as i32,
-                             gl::UNSIGNED_INT,
-                             ptr::null());
+            gl::DrawElements(gl::TRIANGLES, 6 as i32, gl::UNSIGNED_INT, ptr::null());
 
         }
 
