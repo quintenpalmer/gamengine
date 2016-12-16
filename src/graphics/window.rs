@@ -27,6 +27,9 @@ impl Window {
                 glutin::Event::Closed => {
                     return true
                 },
+                glutin::Event::KeyboardInput(glutin::ElementState::Released, _, Some(glutin::VirtualKeyCode::Q)) => {
+                    return true
+                },
                 _ => (),
             }
         };
