@@ -146,24 +146,22 @@ pub struct ShaderSource {
     pub var_name: &'static str,
 }
 
-const VS_SRC: &'static str =
-   "#version 150\n\
-    in vec2 position;\n\
-    void main() {\n\
-       gl_Position = vec4(position, 0.0, 1.0);\n\
-    }";
+const VS_SRC: &'static str = r#"#version 150
+    in vec2 position;
+    void main() {
+       gl_Position = vec4(position, 0.0, 1.0);
+    }"#;
 
 pub const SIMPLE_VERTEX_SOURCE: ShaderSource = ShaderSource {
     source_glsl: VS_SRC,
     var_name: "position",
 };
 
-const FS_SRC: &'static str =
-   "#version 150\n\
-    out vec4 out_color;\n\
-    void main() {\n\
-       out_color = vec4(1.0, 1.0, 1.0, 1.0);\n\
-    }";
+const FS_SRC: &'static str = r#"#version 150
+    out vec4 out_color;
+    void main() {
+       out_color = vec4(1.0, 1.0, 1.0, 1.0);
+    }"#;
 
 pub const SIMPLE_FRAGMENT_SOURCE: ShaderSource = ShaderSource {
     source_glsl: FS_SRC,
