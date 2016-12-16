@@ -32,11 +32,15 @@ impl Program {
                 gl::GetProgramiv(program, gl::INFO_LOG_LENGTH, &mut len);
                 let mut buf = Vec::with_capacity(len as usize);
                 buf.set_len((len as usize) - 1); // subtract 1 to skip the trailing null character
-                gl::GetProgramInfoLog(program, len, ptr::null_mut(), buf.as_mut_ptr() as *mut GLchar);
+                gl::GetProgramInfoLog(program,
+                                      len,
+                                      ptr::null_mut(),
+                                      buf.as_mut_ptr() as *mut GLchar);
                 // TODO don't panic here and return an error that we handle
-                panic!("{}", str::from_utf8(&buf).ok().expect("ProgramInfoLog not valid utf8"));
+                panic!("{}",
+                       str::from_utf8(&buf).ok().expect("ProgramInfoLog not valid utf8"));
             }
-            return Program{
+            return Program {
                 addr: program,
                 vertex_shader: vs,
                 fragment_shader: fs,
@@ -101,12 +105,16 @@ impl Shader {
                 gl::GetShaderiv(shader, gl::INFO_LOG_LENGTH, &mut len);
                 let mut buf = Vec::with_capacity(len as usize);
                 buf.set_len((len as usize) - 1); // subtract 1 to skip the trailing null character
-                gl::GetShaderInfoLog(shader, len, ptr::null_mut(), buf.as_mut_ptr() as *mut GLchar);
+                gl::GetShaderInfoLog(shader,
+                                     len,
+                                     ptr::null_mut(),
+                                     buf.as_mut_ptr() as *mut GLchar);
                 // TODO don't panic here and return an error that we handle
-                panic!("{}", str::from_utf8(&buf).ok().expect("ShaderInfoLog not valid utf8"));
+                panic!("{}",
+                       str::from_utf8(&buf).ok().expect("ShaderInfoLog not valid utf8"));
             }
         }
-        return Shader{
+        return Shader {
             addr: shader,
             var_name: shader_source.var_name,
         };
@@ -145,7 +153,7 @@ const VS_SRC: &'static str =
        gl_Position = vec4(position, 0.0, 1.0);\n\
     }";
 
-pub const SIMPLE_VERTEX_SOURCE: ShaderSource = ShaderSource{
+pub const SIMPLE_VERTEX_SOURCE: ShaderSource = ShaderSource {
     source_glsl: VS_SRC,
     var_name: "position",
 };
@@ -157,7 +165,7 @@ const FS_SRC: &'static str =
        out_color = vec4(1.0, 1.0, 1.0, 1.0);\n\
     }";
 
-pub const SIMPLE_FRAGMENT_SOURCE: ShaderSource = ShaderSource{
+pub const SIMPLE_FRAGMENT_SOURCE: ShaderSource = ShaderSource {
     source_glsl: FS_SRC,
     var_name: "out_color",
 };

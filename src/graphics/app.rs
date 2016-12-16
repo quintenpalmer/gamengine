@@ -15,27 +15,31 @@ pub struct App {
 }
 
 impl App {
-    pub fn new<T: Into<String>>(
-            width: u32,
-            height: u32,
-            title: T,
-            vertex_source: shader::ShaderSource,
-            fragment_source: shader::ShaderSource,
-            r_width: f32, r_height: f32, xloc: f32, yloc: f32) -> Result<App, Box<error::Error>> {
+    pub fn new<T: Into<String>>(width: u32,
+                                height: u32,
+                                title: T,
+                                vertex_source: shader::ShaderSource,
+                                fragment_source: shader::ShaderSource,
+                                r_width: f32,
+                                r_height: f32,
+                                xloc: f32,
+                                yloc: f32)
+                                -> Result<App, Box<error::Error>> {
 
         let window = try!(window::Window::new(width, height, title));
 
         try!(window.make_main());
 
         let vertex_shader = shader::Shader::new(vertex_source, shader::GLShaderEnum::VertexShader);
-        let fragment_shader = shader::Shader::new(fragment_source, shader::GLShaderEnum::FragmentShader);
+        let fragment_shader = shader::Shader::new(fragment_source,
+                                                  shader::GLShaderEnum::FragmentShader);
         let program = shader::Program::new(vertex_shader, fragment_shader);
 
         let vertex_data = vertex::VertexData::new(r_width, r_height, xloc, yloc);
 
         program.link_vertex(&vertex_data);
 
-        return Ok(App{
+        return Ok(App {
             window: window,
             program: program,
             vertices: vertex_data,
