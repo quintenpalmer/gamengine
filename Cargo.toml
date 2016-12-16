@@ -1,0 +1,10 @@
+[package]
+name = "parallax"
+version = "0.1.0"
+authors = ["Quinten Palmer <quintenpalmer@gmail.com>"]
+
+[[bin]]
+name = "parallaxclient"
+path = "src/parallaxclient/main.rs"
+test = false
+bench = false
