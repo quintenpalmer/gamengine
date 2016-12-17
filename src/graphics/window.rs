@@ -22,7 +22,7 @@ impl Window {
 
     pub fn make_main(&self) -> Result<(), glutin::ContextError> {
         // It is essential to make the context current before calling `gl::load_with`.
-        unsafe { self.window.make_current() }.unwrap();
+        unsafe { try!(self.window.make_current()) };
 
         // Load the OpenGL function pointers
         // TODO: `as *const _` will not be needed once glutin is updated to the latest gl version
