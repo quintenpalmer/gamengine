@@ -26,7 +26,7 @@ struct VertexSpecification {
 }
 
 impl Rect {
-    pub fn new(width: f32, height: f32, xloc: f32, yloc: f32) -> Rect {
+    pub fn new(xloc: f32, yloc: f32, width: f32, height: f32) -> Rect {
         return Rect {
             x: xloc,
             y: yloc,
