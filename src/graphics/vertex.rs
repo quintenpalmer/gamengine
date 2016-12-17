@@ -2,14 +2,15 @@ extern crate gl;
 
 use gl::types::*;
 
+use std::vec;
 use std::mem;
 
 pub struct VertexBuffers {
     vao: GLuint,
     vbo: GLuint,
     ebo: GLuint,
-    rect: Rect,
     pub vertex_width: u8,
+    pub rects: Vec<Rect>,
 }
 
 pub struct Rect {
@@ -66,7 +67,7 @@ impl Rect {
 }
 
 impl VertexBuffers {
-    pub fn new(rect: Rect) -> VertexBuffers {
+    pub fn new(rects: Vec<Rect>) -> VertexBuffers {
         let mut vao = 0;
         let mut vbo = 0;
         let mut ebo = 0;
@@ -87,7 +88,7 @@ impl VertexBuffers {
             vao: vao,
             vbo: vbo,
             ebo: ebo,
-            rect: rect,
+            rects: rects,
             vertex_width: 2,
         };
 
@@ -95,10 +96,21 @@ impl VertexBuffers {
         return v;
     }
 
-    pub fn gen_vertex_buffers(&mut self) {
-        let vert_spec = self.rect.get_vertex_specification();
-        let vertices = vert_spec.vertices;
-        let elements = vert_spec.elements;
+    pub fn gen_vertex_buffers(&mut self) -> GLsizei {
+        let mut vertices = vec::Vec::new();
+        let mut elements = vec::Vec::new();
+        let mut vertex_count_offset = 0;
+        for rect in self.rects.iter() {
+            let mut vert_spec = rect.get_vertex_specification();
+
+            let vertex_count = (vert_spec.vertices.len() / 2) as i32;
+
+            vertices.append(&mut vert_spec.vertices);
+            elements.append(&mut vert_spec.elements.iter().map(|&x| x + vertex_count_offset).collect());
+
+            vertex_count_offset += vertex_count;
+        }
+        let elem_count = elements.len() as GLsizei;
 
         unsafe {
             // copy the vertex data to the Vertex Buffer Object
@@ -114,6 +126,8 @@ impl VertexBuffers {
                            mem::transmute(&elements[0]),
                            gl::STATIC_DRAW);
         }
+
+        return elem_count;
     }
 
     pub fn close(&self) {

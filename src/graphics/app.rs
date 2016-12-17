@@ -20,7 +20,7 @@ impl App {
                                 title: T,
                                 vertex_source: shader::ShaderSource,
                                 fragment_source: shader::ShaderSource,
-                                rect: vertex::Rect)
+                                rects: Vec<vertex::Rect>)
                                 -> Result<App, Box<error::Error>> {
 
         let window = try!(window::Window::new(width, height, title));
@@ -32,7 +32,7 @@ impl App {
                                                   shader::GLShaderEnum::FragmentShader);
         let program = shader::Program::new(vertex_shader, fragment_shader);
 
-        let vertex_data = vertex::VertexBuffers::new(rect);
+        let vertex_data = vertex::VertexBuffers::new(rects);
 
         program.link_vertex(&vertex_data);
 
@@ -45,13 +45,13 @@ impl App {
 
     pub fn draw(&mut self) -> Result<(), glutin::ContextError> {
         // build and copy the vertex data
-        self.vertices.gen_vertex_buffers();
+        let element_count = self.vertices.gen_vertex_buffers();
         unsafe {
             // Clear the screen to red
             gl::ClearColor(0.9, 0.1, 0.2, 1.0);
             gl::Clear(gl::COLOR_BUFFER_BIT);
 
-            gl::DrawElements(gl::TRIANGLES, 6 as i32, gl::UNSIGNED_INT, ptr::null());
+            gl::DrawElements(gl::TRIANGLES, element_count, gl::UNSIGNED_INT, ptr::null());
 
         }
 
