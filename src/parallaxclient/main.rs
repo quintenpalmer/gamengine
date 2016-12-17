@@ -1,4 +1,5 @@
 extern crate graphics;
+extern crate fileformat;
 
 #[derive(Debug)]
 struct ArgError {}
@@ -29,9 +30,23 @@ fn main() {
 }
 
 fn run_app() -> Result<(), Box<std::error::Error>> {
-    let rects = vec![graphics::Rect::new(0.0, 0.0, 0.2, 0.6),
-                     graphics::Rect::new(0.0, 0.0, 0.6, 0.2)];
+    let args: Vec<String> = std::env::args().collect();
+    let filename: &str = try!(match args.len() {
+        2 => Ok(args[1].as_str()),
+        _ => Err(Box::new(ArgError {})),
+    });
 
+    println!("reading: {}", filename);
+    let rect_sources = try!(fileformat::parse_rect_source(filename));
+
+
+    let mut rects = std::vec::Vec::new();
+    for rect_source in rect_sources.iter() {
+        rects.push(graphics::Rect::new(rect_source.x,
+                                       rect_source.y,
+                                       rect_source.width,
+                                       rect_source.height));
+    }
     let app = try!(graphics::App::new(600,
                                       600,
                                       "Parallax Client Demo",
