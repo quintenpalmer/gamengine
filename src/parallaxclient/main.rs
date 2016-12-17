@@ -1,5 +1,24 @@
 extern crate graphics;
 
+#[derive(Debug)]
+struct ArgError {}
+
+impl std::fmt::Display for ArgError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "parallax command line argument error")
+    }
+}
+
+impl std::error::Error for ArgError {
+    fn description(&self) -> &str {
+        return "must supply the filename to read from";
+    }
+
+    fn cause(&self) -> Option<&std::error::Error> {
+        return None;
+    }
+}
+
 fn main() {
     println!("hello from a client");
     match run_app() {
