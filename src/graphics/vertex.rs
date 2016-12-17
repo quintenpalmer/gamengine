@@ -19,6 +19,11 @@ pub struct Rect {
     height: f32,
 }
 
+struct VertexSpecification {
+    vertices: Vec<GLfloat>,
+    elements: Vec<GLint>,
+}
+
 impl Rect {
     pub fn new(width: f32, height: f32, xloc: f32, yloc: f32) -> Rect {
         return Rect {
@@ -37,10 +42,26 @@ impl Rect {
         return (top, bottom, left, right);
     }
 
-    fn vertex_vector(&self) -> Vec<GLfloat> {
+    fn get_vertex_specification(&self) -> VertexSpecification {
         let (top, bottom, left, right) = self.calc_corners();
         // top-left, top-right, bottom-left, bottom-right
-        return vec![left, top, right, top, right, bottom, left, bottom];
+        let vertices = vec![left, top, right, top, right, bottom, left, bottom];
+
+        // the elements each point to what 3 points make up a single triangle
+        // given the elements below and the vertex data, we see the triangles
+        // are as follows:
+        //
+        // triangle one | triangle two
+        //  o--o        |    o
+        //  | /         |   /|
+        //  |/          |  / |
+        //  o           | o--o
+        let elements: Vec<GLint> = vec![0, 1, 2, 2, 3, 0];
+
+        return VertexSpecification {
+            vertices: vertices,
+            elements: elements,
+        };
     }
 }
 
@@ -75,18 +96,9 @@ impl VertexBuffers {
     }
 
     pub fn gen_vertex_buffers(&mut self) {
-        let vertices: Vec<GLfloat> = self.rect.vertex_vector();
-
-        // the elements each point to what 3 points make up a single triangle
-        // given the elements below and the vertex data, we see the triangles
-        // are as follows:
-        //
-        // triangle one | triangle two
-        //  o--o        |    o
-        //  | /         |   /|
-        //  |/          |  / |
-        //  o           | o--o
-        let elements: Vec<GLint> = vec![0, 1, 2, 2, 3, 0];
+        let vert_spec = self.rect.get_vertex_specification();
+        let vertices = vert_spec.vertices;
+        let elements = vert_spec.elements;
 
         unsafe {
             // copy the vertex data to the Vertex Buffer Object
