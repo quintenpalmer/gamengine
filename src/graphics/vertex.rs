@@ -96,7 +96,7 @@ impl VertexBuffers {
         return v;
     }
 
-    pub fn gen_vertex_buffers(&mut self) -> GLsizei {
+    fn full_vertex_spec(&self) -> VertexSpecification {
         let mut vertices = vec::Vec::new();
         let mut elements = vec::Vec::new();
         let mut vertex_count_offset = 0;
@@ -110,6 +110,18 @@ impl VertexBuffers {
 
             vertex_count_offset += vertex_count;
         }
+
+        return VertexSpecification {
+            vertices: vertices,
+            elements: elements,
+        };
+    }
+
+    pub fn gen_vertex_buffers(&mut self) -> GLsizei {
+        let vertex_spec = self.full_vertex_spec();
+        let vertices = vertex_spec.vertices;
+        let elements = vertex_spec.elements;
+
         let elem_count = elements.len() as GLsizei;
 
         unsafe {
