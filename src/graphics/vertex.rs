@@ -39,12 +39,8 @@ impl Rect {
 
     fn vertex_vector(&self) -> Vec<GLfloat> {
         let (top, bottom, left, right) = self.calc_corners();
-        return vec!(
-            left,  top,    // top left
-            right, top,    // top right
-            right, bottom, // bottom right
-            left,  bottom, // bottom left
-        );
+        // top-left, top-right, bottom-left, bottom-right
+        return vec![left, top, right, top, right, bottom, left, bottom];
     }
 }
 
@@ -81,10 +77,16 @@ impl VertexData {
     pub fn gen_vertex_buffers(&mut self) {
         let vertices: Vec<GLfloat> = self.rect.vertex_vector();
 
-        let elements: Vec<GLint> = vec!(
-            0, 1, 2,
-            2, 3, 0,
-        );
+        // the elements each point to what 3 points make up a single triangle
+        // given the elements below and the vertex data, we see the triangles
+        // are as follows:
+        //
+        // triangle one | triangle two
+        //  o--o        |    o
+        //  | /         |   /|
+        //  |/          |  / |
+        //  o           | o--o
+        let elements: Vec<GLint> = vec![0, 1, 2, 2, 3, 0];
 
         unsafe {
             // copy the vertex data to the Vertex Buffer Object
