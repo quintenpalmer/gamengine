@@ -11,7 +11,7 @@ fn main() {
                                    graphics::SIMPLE_FRAGMENT_SOURCE,
                                    rects);
     match r_app {
-        Ok(mut app) => {
+        Ok(app) => {
             loop {
                 match app.draw() {
                     Ok(_) => {}

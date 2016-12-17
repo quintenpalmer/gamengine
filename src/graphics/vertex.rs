@@ -84,7 +84,7 @@ impl VertexBuffers {
             gl::GenBuffers(1, &mut ebo);
         }
 
-        let mut v = VertexBuffers {
+        let v = VertexBuffers {
             vao: vao,
             vbo: vbo,
             ebo: ebo,
@@ -117,7 +117,7 @@ impl VertexBuffers {
         };
     }
 
-    pub fn gen_vertex_buffers(&mut self) -> GLsizei {
+    pub fn gen_vertex_buffers(&self) -> GLsizei {
         let vertex_spec = self.full_vertex_spec();
         let vertices = vertex_spec.vertices;
         let elements = vertex_spec.elements;
