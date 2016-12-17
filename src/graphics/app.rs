@@ -20,10 +20,7 @@ impl App {
                                 title: T,
                                 vertex_source: shader::ShaderSource,
                                 fragment_source: shader::ShaderSource,
-                                r_width: f32,
-                                r_height: f32,
-                                xloc: f32,
-                                yloc: f32)
+                                rect: vertex::Rect)
                                 -> Result<App, Box<error::Error>> {
 
         let window = try!(window::Window::new(width, height, title));
@@ -35,7 +32,7 @@ impl App {
                                                   shader::GLShaderEnum::FragmentShader);
         let program = shader::Program::new(vertex_shader, fragment_shader);
 
-        let vertex_data = vertex::VertexData::new(r_width, r_height, xloc, yloc);
+        let vertex_data = vertex::VertexData::new(rect);
 
         program.link_vertex(&vertex_data);
 

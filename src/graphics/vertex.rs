@@ -8,15 +8,48 @@ pub struct VertexData {
     vao: GLuint,
     vbo: GLuint,
     ebo: GLuint,
+    rect: Rect,
+    pub vertex_width: u8,
+}
+
+pub struct Rect {
     pub x: f32,
     pub y: f32,
     width: f32,
     height: f32,
-    pub vertex_width: u8,
+}
+
+impl Rect {
+    pub fn new(width: f32, height: f32, xloc: f32, yloc: f32) -> Rect {
+        return Rect {
+            x: xloc,
+            y: yloc,
+            width: width,
+            height: height,
+        };
+    }
+
+    fn calc_corners(&self) -> (f32, f32, f32, f32) {
+        let top = self.y + (self.height / 2.0);
+        let bottom = self.y - (self.height / 2.0);
+        let right = self.x + (self.width / 2.0);
+        let left = self.x - (self.width / 2.0);
+        return (top, bottom, left, right);
+    }
+
+    fn vertex_vector(&self) -> Vec<GLfloat> {
+        let (top, bottom, left, right) = self.calc_corners();
+        return vec!(
+            left,  top,    // top left
+            right, top,    // top right
+            right, bottom, // bottom right
+            left,  bottom, // bottom left
+        );
+    }
 }
 
 impl VertexData {
-    pub fn new(width: f32, height: f32, xloc: f32, yloc: f32) -> VertexData {
+    pub fn new(rect: Rect) -> VertexData {
         let mut vao = 0;
         let mut vbo = 0;
         let mut ebo = 0;
@@ -37,10 +70,7 @@ impl VertexData {
             vao: vao,
             vbo: vbo,
             ebo: ebo,
-            x: xloc,
-            y: yloc,
-            width: width,
-            height: height,
+            rect: rect,
             vertex_width: 2,
         };
 
@@ -49,8 +79,7 @@ impl VertexData {
     }
 
     pub fn gen_vertex_buffers(&mut self) {
-        let (top, bottom, left, right) = calc_corners(self.x, self.y, self.width, self.height);
-        let vertices: Vec<GLfloat> = vertex_vector(top, bottom, left, right);
+        let vertices: Vec<GLfloat> = self.rect.vertex_vector();
 
         let elements: Vec<GLint> = vec!(
             0, 1, 2,
@@ -83,21 +112,4 @@ impl VertexData {
             gl::DeleteBuffers(1, &self.ebo);
         }
     }
-}
-
-fn calc_corners(width: f32, height: f32, x: f32, y: f32) -> (f32, f32, f32, f32) {
-    let top = y + (height / 2.0);
-    let bottom = y - (height / 2.0);
-    let right = x + (width / 2.0);
-    let left = x - (width / 2.0);
-    return (top, bottom, left, right);
-}
-
-fn vertex_vector(top: f32, bottom: f32, left: f32, right: f32) -> Vec<GLfloat> {
-    return vec!(
-         left,    top, // top left
-        right,    top, // top right
-        right, bottom, // bottom right
-         left, bottom  // bottom left
-    );
 }
