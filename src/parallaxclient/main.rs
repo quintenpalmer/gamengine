@@ -4,7 +4,7 @@ fn main() {
     println!("hello from a client");
     match run_app() {
         Ok(_) => println!("ran successfully"),
-        Err(err) => println!("error: {}", err),
+        Err(err) => println!("error: {} (reason: {})", err, err.description()),
     };
     println!("exiting");
 }
