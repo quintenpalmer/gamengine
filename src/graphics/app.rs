@@ -11,7 +11,7 @@ use vertex;
 pub struct App {
     pub window: window::Window,
     program: shader::Program,
-    vertices: vertex::VertexData,
+    vertices: vertex::VertexBuffers,
 }
 
 impl App {
@@ -32,7 +32,7 @@ impl App {
                                                   shader::GLShaderEnum::FragmentShader);
         let program = shader::Program::new(vertex_shader, fragment_shader);
 
-        let vertex_data = vertex::VertexData::new(rect);
+        let vertex_data = vertex::VertexBuffers::new(rect);
 
         program.link_vertex(&vertex_data);
 

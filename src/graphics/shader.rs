@@ -48,7 +48,7 @@ impl Program {
         }
     }
 
-    pub fn link_vertex(&self, vd: &vertex::VertexData) {
+    pub fn link_vertex(&self, vd: &vertex::VertexBuffers) {
         unsafe {
             gl::UseProgram(self.addr);
         }
@@ -121,7 +121,7 @@ impl Shader {
     }
 
 
-    pub fn link_to_program(&self, program: &Program, vd: &vertex::VertexData) {
+    pub fn link_to_program(&self, program: &Program, vd: &vertex::VertexBuffers) {
         unsafe {
             // Specify the layout of the vertex data
             let pos_attr = gl::GetAttribLocation(program.addr,

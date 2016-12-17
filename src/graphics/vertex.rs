@@ -4,7 +4,7 @@ use gl::types::*;
 
 use std::mem;
 
-pub struct VertexData {
+pub struct VertexBuffers {
     vao: GLuint,
     vbo: GLuint,
     ebo: GLuint,
@@ -44,8 +44,8 @@ impl Rect {
     }
 }
 
-impl VertexData {
-    pub fn new(rect: Rect) -> VertexData {
+impl VertexBuffers {
+    pub fn new(rect: Rect) -> VertexBuffers {
         let mut vao = 0;
         let mut vbo = 0;
         let mut ebo = 0;
@@ -62,7 +62,7 @@ impl VertexData {
             gl::GenBuffers(1, &mut ebo);
         }
 
-        let mut v = VertexData {
+        let mut v = VertexBuffers {
             vao: vao,
             vbo: vbo,
             ebo: ebo,
