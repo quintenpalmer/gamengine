@@ -12,3 +12,4 @@ bench = false
 [dependencies]
 graphics = {path = "src/graphics"}
 fileformat = {path = "src/fileformat"}
+types = {path = "src/types"}

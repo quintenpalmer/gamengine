@@ -1,12 +1,18 @@
 extern crate rustc_serialize;
 extern crate csv;
 
+extern crate types;
+
 #[derive(RustcDecodable)]
 pub struct RectSource {
     pub x: f32,
     pub y: f32,
     pub width: f32,
     pub height: f32,
+    pub x_func: types::MathFunc,
+    pub y_func: types::MathFunc,
+    pub x_cycle_size: u16,
+    pub y_cycle_size: u16,
 }
 
 pub fn parse_rect_source(filename: &str) -> Result<Vec<RectSource>, csv::Error> {

@@ -16,6 +16,8 @@ pub struct VertexBuffers {
 pub struct Rect {
     pub x: f32,
     pub y: f32,
+    orig_x: f32,
+    orig_y: f32,
     width: f32,
     height: f32,
 }
@@ -30,6 +32,8 @@ impl Rect {
         return Rect {
             x: xloc,
             y: yloc,
+            orig_x: xloc,
+            orig_y: yloc,
             width: width,
             height: height,
         };
@@ -41,6 +45,11 @@ impl Rect {
         let right = self.x + (self.width / 2.0);
         let left = self.x - (self.width / 2.0);
         return (top, bottom, left, right);
+    }
+
+    pub fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
+        self.x = self.orig_x + x_offset;
+        self.y = self.orig_y + y_offset;
     }
 
     fn get_vertex_specification(&self) -> VertexSpecification {
