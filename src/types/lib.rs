@@ -13,7 +13,7 @@ impl Decodable for MathFunc {
         let s = try!(d.read_str());
         match s.as_str() {
             "lin" => Ok(MathFunc::Linear),
-            _ => Err(d.error("invalid path")),
+            _ => Err(d.error("invalid math function")),
         }
     }
 }
