@@ -78,7 +78,7 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
 
 pub fn operate(func: types::MathFunc, iteration: u16, u_cycle_size: u16) -> f32 {
     let cycle_size = f32::from(u_cycle_size);
-    let tick = f32::from(iteration) % cycle_size - (cycle_size / 2.0);
+    let tick = f32::from(iteration) % cycle_size;
 
-    return func.operate(tick) / cycle_size;
+    return func.plot_with_max(tick, cycle_size);
 }

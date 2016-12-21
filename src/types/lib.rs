@@ -24,4 +24,10 @@ impl MathFunc {
             &MathFunc::Linear => x,
         }
     }
+
+    pub fn plot_with_max(&self, x: f32, max: f32) -> f32 {
+        match self {
+            &MathFunc::Linear => (x - max / 2.0) / max,
+        }
+    }
 }
