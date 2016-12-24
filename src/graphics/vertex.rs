@@ -55,7 +55,8 @@ impl Rect {
     fn get_vertex_specification(&self) -> VertexSpecification {
         let (top, bottom, left, right) = self.calc_corners();
         // top-left, top-right, bottom-left, bottom-right
-        let vertices = vec![left, top, right, top, right, bottom, left, bottom];
+        let vertices = vec![left, top, 0.0, 0.0, 1.0, right, top, 0.0, 0.0, 1.0, right, bottom,
+                            0.0, 1.0, 0.0, left, bottom, 0.0, 1.0, 0.0];
 
         // the elements each point to what 3 points make up a single triangle
         // given the elements below and the vertex data, we see the triangles
@@ -98,7 +99,7 @@ impl VertexBuffers {
             vbo: vbo,
             ebo: ebo,
             rects: rects,
-            vertex_width: 2,
+            vertex_width: 5,
         };
 
         v.gen_vertex_buffers();
