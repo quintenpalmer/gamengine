@@ -51,6 +51,7 @@ impl Program {
     pub fn link_vertex(&self, vd: &vertex::VertexBuffers) {
         unsafe {
             gl::UseProgram(self.addr);
+            gl::BindFragDataLocation(self.addr, 0, CString::new("out_color").unwrap().as_ptr());
         }
         self.vertex_shader.link_to_program(self, vd);
     }
