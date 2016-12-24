@@ -11,6 +11,8 @@ pub struct RectSource {
     pub height: f32,
     pub x_func: types::MathFunc,
     pub y_func: types::MathFunc,
+    pub x_scale: f32,
+    pub y_scale: f32,
     pub x_cycle_size: u16,
     pub y_cycle_size: u16,
 }

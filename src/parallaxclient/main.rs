@@ -61,8 +61,8 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
         for x in 0..rect_sources.len() {
             let ref s = rect_sources[x];
 
-            let new_x = operate(s.x_func, iteration, s.x_cycle_size);
-            let new_y = operate(s.y_func, iteration, s.y_cycle_size);
+            let new_x = s.x_scale * operate(s.x_func, iteration, s.x_cycle_size);
+            let new_y = s.y_scale * operate(s.y_func, iteration, s.y_cycle_size);
 
             try!(app.update_rect(x, new_x, new_y));
         }
