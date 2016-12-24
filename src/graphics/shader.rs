@@ -124,10 +124,10 @@ impl Shader {
     pub fn link_to_program(&self, program: &Program, vd: &vertex::VertexBuffers) {
         unsafe {
             // Specify the layout of the vertex data
-            let pos_attr = gl::GetAttribLocation(program.addr,
-                                                 CString::new(self.var_name).unwrap().as_ptr());
-            gl::EnableVertexAttribArray(pos_attr as GLuint);
-            gl::VertexAttribPointer(pos_attr as GLuint, 3, gl::FLOAT,
+            let attr = gl::GetAttribLocation(program.addr,
+                                             CString::new(self.var_name).unwrap().as_ptr());
+            gl::EnableVertexAttribArray(attr as GLuint);
+            gl::VertexAttribPointer(attr as GLuint, 3, gl::FLOAT,
                                     gl::FALSE as GLboolean,
                                     ((vd.vertex_width as GLsizei) * (mem::size_of::<GLfloat>() as GLsizei)) as i32,
                                     ptr::null());
