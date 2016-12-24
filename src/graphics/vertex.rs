@@ -20,6 +20,9 @@ pub struct Rect {
     orig_y: f32,
     width: f32,
     height: f32,
+    red: u8,
+    green: u8,
+    blue: u8,
 }
 
 struct VertexSpecification {
@@ -36,6 +39,9 @@ impl Rect {
             orig_y: yloc,
             width: width,
             height: height,
+            red: 0,
+            green: 255,
+            blue: 255,
         };
     }
 
@@ -54,9 +60,12 @@ impl Rect {
 
     fn get_vertex_specification(&self) -> VertexSpecification {
         let (top, bottom, left, right) = self.calc_corners();
+        let red = f32::from(self.red) / 255.0;
+        let green = f32::from(self.green) / 255.0;
+        let blue = f32::from(self.blue) / 255.0;
         // top-left, top-right, bottom-left, bottom-right
-        let vertices = vec![left, top, 0.0, 0.0, 1.0, right, top, 0.0, 0.0, 1.0, right, bottom,
-                            0.0, 1.0, 0.0, left, bottom, 0.0, 1.0, 0.0];
+        let vertices = vec![left, top, red, green, blue, right, top, red, green, blue, right,
+                            bottom, red, green, blue, left, bottom, red, green, blue];
 
         // the elements each point to what 3 points make up a single triangle
         // given the elements below and the vertex data, we see the triangles
