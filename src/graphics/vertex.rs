@@ -112,7 +112,7 @@ impl VertexBuffers {
         for rect in self.rects.iter() {
             let mut vert_spec = rect.get_vertex_specification();
 
-            let vertex_count = (vert_spec.vertices.len() / 2) as i32;
+            let vertex_count = (vert_spec.vertices.len() / (self.vertex_width as usize)) as i32;
 
             vertices.append(&mut vert_spec.vertices);
             elements.append(&mut vert_spec.elements.iter().map(|&x| x + vertex_count_offset).collect());
