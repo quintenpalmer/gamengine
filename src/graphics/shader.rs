@@ -127,7 +127,7 @@ impl Shader {
             let attr = gl::GetAttribLocation(program.addr,
                                              CString::new(self.var_name).unwrap().as_ptr());
             gl::EnableVertexAttribArray(attr as GLuint);
-            gl::VertexAttribPointer(attr as GLuint, 3, gl::FLOAT,
+            gl::VertexAttribPointer(attr as GLuint, 2, gl::FLOAT,
                                     gl::FALSE as GLboolean,
                                     ((vd.vertex_width as GLsizei) * (mem::size_of::<GLfloat>() as GLsizei)) as i32,
                                     ptr::null());
