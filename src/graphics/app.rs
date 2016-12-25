@@ -21,7 +21,7 @@ impl App {
                                 title: T,
                                 vertex_source: shader::ShaderSource,
                                 fragment_source: shader::ShaderSource,
-                                rects: Vec<vertex::Rect>)
+                                rects: Vec<Box<vertex::VertexSpecable>>)
                                 -> Result<App, Box<error::Error>> {
 
         let window = try!(window::Window::new(width, height, title));

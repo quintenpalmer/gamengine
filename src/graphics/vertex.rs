@@ -10,7 +10,7 @@ pub struct VertexBuffers {
     vbo: GLuint,
     ebo: GLuint,
     pub vertex_width: u8,
-    pub rects: Vec<Rect>,
+    pub rects: Vec<Box<VertexSpecable>>,
 }
 
 pub struct Rect {
@@ -25,7 +25,12 @@ pub struct Rect {
     blue: u8,
 }
 
-struct VertexSpecification {
+pub trait VertexSpecable {
+    fn get_vertex_specification(&self) -> VertexSpecification;
+    fn update_offset(&mut self, x: f32, y: f32);
+}
+
+pub struct VertexSpecification {
     vertices: Vec<GLfloat>,
     elements: Vec<GLint>,
 }
@@ -59,8 +64,10 @@ impl Rect {
         let left = self.x - (self.width / 2.0);
         return (top, bottom, left, right);
     }
+}
 
-    pub fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
+impl VertexSpecable for Rect {
+    fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
         self.x = self.orig_x + x_offset;
         self.y = self.orig_y + y_offset;
     }
@@ -93,7 +100,7 @@ impl Rect {
 }
 
 impl VertexBuffers {
-    pub fn new(rects: Vec<Rect>) -> VertexBuffers {
+    pub fn new(rects: Vec<Box<VertexSpecable>>) -> VertexBuffers {
         let mut vao = 0;
         let mut vbo = 0;
         let mut ebo = 0;

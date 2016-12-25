@@ -41,15 +41,15 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
     let rect_sources = try!(fileformat::parse_rect_source(filename));
 
 
-    let mut rects = std::vec::Vec::new();
+    let mut rects: Vec<Box<graphics::VertexSpecable>> = std::vec::Vec::new();
     for rect_source in rect_sources.iter() {
-        rects.push(graphics::Rect::new(rect_source.x,
-                                       rect_source.y,
-                                       rect_source.width,
-                                       rect_source.height,
-                                       rect_source.red,
-                                       rect_source.green,
-                                       rect_source.blue));
+        rects.push(Box::new(graphics::Rect::new(rect_source.x,
+                                                rect_source.y,
+                                                rect_source.width,
+                                                rect_source.height,
+                                                rect_source.red,
+                                                rect_source.green,
+                                                rect_source.blue)));
     }
     let mut app = try!(graphics::App::new(600,
                                           600,
