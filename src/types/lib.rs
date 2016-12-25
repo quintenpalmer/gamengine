@@ -34,6 +34,7 @@ impl MathFunc {
     pub fn plot_with_max(&self, x: f32, max: f32) -> f32 {
         match self {
             &MathFunc::Linear => (x - max / 2.0) / max,
+            // y = -(x - n/2)^2 + (n/2)^2
             &MathFunc::Parabolic => {
                 let half_max = max / 2.0;
                 let non_minimized = -((x - half_max).powi(2)) + half_max.powi(2);
