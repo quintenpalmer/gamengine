@@ -59,8 +59,6 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
                                           rects));
     let mut iteration = 0;
     loop {
-        try!(app.draw());
-
         for x in 0..rect_sources.len() {
             let ref s = rect_sources[x];
 
@@ -74,6 +72,8 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
             break;
         }
         iteration += 1;
+
+        try!(app.draw());
     }
     app.close();
     return Ok(());
