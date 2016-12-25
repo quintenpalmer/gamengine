@@ -31,7 +31,14 @@ struct VertexSpecification {
 }
 
 impl Rect {
-    pub fn new(xloc: f32, yloc: f32, width: f32, height: f32) -> Rect {
+    pub fn new(xloc: f32,
+               yloc: f32,
+               width: f32,
+               height: f32,
+               red: u8,
+               green: u8,
+               blue: u8)
+               -> Rect {
         return Rect {
             x: xloc,
             y: yloc,
@@ -39,9 +46,9 @@ impl Rect {
             orig_y: yloc,
             width: width,
             height: height,
-            red: 0,
-            green: 255,
-            blue: 255,
+            red: red,
+            green: green,
+            blue: blue,
         };
     }
 
