@@ -124,6 +124,79 @@ impl VertexSpecable for Rect {
     }
 }
 
+pub struct Triangle {
+    loc: LocInfo,
+    width: f32,
+    height: f32,
+    color: Color,
+}
+
+impl Triangle {
+    pub fn new(xloc: f32,
+               yloc: f32,
+               width: f32,
+               height: f32,
+               red: u8,
+               green: u8,
+               blue: u8)
+               -> Triangle {
+        return Triangle {
+            loc: LocInfo {
+                x: xloc,
+                y: yloc,
+                orig_x: xloc,
+                orig_y: yloc,
+            },
+            width: width,
+            height: height,
+            color: Color {
+                red: red,
+                green: green,
+                blue: blue,
+            },
+        };
+    }
+
+    fn calc_points(&self) -> (f32, f32, f32, f32, f32) {
+        let top = self.loc.y + (self.height / 2.0);
+        let bottom = self.loc.y - (self.height / 2.0);
+        let right = self.loc.x + (self.width / 2.0);
+        let left = self.loc.x - (self.width / 2.0);
+        let middle = self.loc.x;
+        return (top, bottom, left, right, middle);
+    }
+}
+
+impl VertexSpecable for Triangle {
+    fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
+        self.loc.update_offset(x_offset, y_offset)
+    }
+
+    fn get_vertex_specification(&self) -> VertexSpecification {
+        let (top, bottom, left, right, middle) = self.calc_points();
+        let (red, green, blue) = self.color.get_color_floats();
+        // top-middle, bottom-right, bottom-left
+        let vertices = vec![middle, top, red, green, blue, right, bottom, red, green, blue, left,
+                            bottom, red, green, blue];
+
+        // the elements each point to what 3 points make up a single triangle
+        // given the elements below and the vertex data, we see the triangle
+        // is as follows:
+        //
+        // triangle
+        //  o--o
+        //  | /
+        //  |/
+        //  o
+        let elements: Vec<GLint> = vec![0, 1, 2];
+
+        return VertexSpecification {
+            vertices: vertices,
+            elements: elements,
+        };
+    }
+}
+
 impl VertexBuffers {
     pub fn new(rects: Vec<Box<VertexSpecable>>) -> VertexBuffers {
         let mut vao = 0;
