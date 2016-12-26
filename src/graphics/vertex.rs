@@ -14,8 +14,8 @@ pub struct VertexBuffers {
 }
 
 pub struct Rect {
-    pub x: f32,
-    pub y: f32,
+    x: f32,
+    y: f32,
     orig_x: f32,
     orig_y: f32,
     width: f32,
