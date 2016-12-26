@@ -14,10 +14,7 @@ pub struct VertexBuffers {
 }
 
 pub struct Rect {
-    x: f32,
-    y: f32,
-    orig_x: f32,
-    orig_y: f32,
+    loc: LocInfo,
     width: f32,
     height: f32,
     color: Color,
@@ -35,6 +32,20 @@ impl Color {
         let green = f32::from(self.green) / 255.0;
         let blue = f32::from(self.blue) / 255.0;
         return (red, green, blue);
+    }
+}
+
+struct LocInfo {
+    x: f32,
+    y: f32,
+    orig_x: f32,
+    orig_y: f32,
+}
+
+impl LocInfo {
+    fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
+        self.x = self.orig_x + x_offset;
+        self.y = self.orig_y + y_offset;
     }
 }
 
@@ -58,10 +69,12 @@ impl Rect {
                blue: u8)
                -> Rect {
         return Rect {
-            x: xloc,
-            y: yloc,
-            orig_x: xloc,
-            orig_y: yloc,
+            loc: LocInfo {
+                x: xloc,
+                y: yloc,
+                orig_x: xloc,
+                orig_y: yloc,
+            },
             width: width,
             height: height,
             color: Color {
@@ -73,18 +86,17 @@ impl Rect {
     }
 
     fn calc_corners(&self) -> (f32, f32, f32, f32) {
-        let top = self.y + (self.height / 2.0);
-        let bottom = self.y - (self.height / 2.0);
-        let right = self.x + (self.width / 2.0);
-        let left = self.x - (self.width / 2.0);
+        let top = self.loc.y + (self.height / 2.0);
+        let bottom = self.loc.y - (self.height / 2.0);
+        let right = self.loc.x + (self.width / 2.0);
+        let left = self.loc.x - (self.width / 2.0);
         return (top, bottom, left, right);
     }
 }
 
 impl VertexSpecable for Rect {
     fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
-        self.x = self.orig_x + x_offset;
-        self.y = self.orig_y + y_offset;
+        self.loc.update_offset(x_offset, y_offset)
     }
 
     fn get_vertex_specification(&self) -> VertexSpecification {
