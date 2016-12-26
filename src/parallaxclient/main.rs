@@ -43,13 +43,26 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
 
     let mut rects: Vec<Box<graphics::VertexSpecable>> = std::vec::Vec::new();
     for shape_source in shape_sources.iter() {
-        rects.push(Box::new(graphics::Rect::new(shape_source.x,
-                                                shape_source.y,
-                                                shape_source.width,
-                                                shape_source.height,
-                                                shape_source.red,
-                                                shape_source.green,
-                                                shape_source.blue)));
+        match shape_source.shape {
+            fileformat::ShapeType::Rect => {
+                rects.push(Box::new(graphics::Rect::new(shape_source.x,
+                                                        shape_source.y,
+                                                        shape_source.width,
+                                                        shape_source.height,
+                                                        shape_source.red,
+                                                        shape_source.green,
+                                                        shape_source.blue)))
+            }
+            fileformat::ShapeType::Triangle => {
+                rects.push(Box::new(graphics::Triangle::new(shape_source.x,
+                                                            shape_source.y,
+                                                            shape_source.width,
+                                                            shape_source.height,
+                                                            shape_source.red,
+                                                            shape_source.green,
+                                                            shape_source.blue)))
+            }
+        }
     }
     let mut app = try!(graphics::App::new(600,
                                           600,

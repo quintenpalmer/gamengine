@@ -8,6 +8,7 @@ use rustc_serialize::Decoder;
 
 pub enum ShapeType {
     Rect,
+    Triangle,
 }
 
 impl Decodable for ShapeType {
@@ -15,6 +16,7 @@ impl Decodable for ShapeType {
         let s = try!(d.read_str());
         match s.as_str() {
             "rect" => Ok(ShapeType::Rect),
+            "tri" => Ok(ShapeType::Triangle),
             _ => Err(d.error("invalid math function")),
         }
     }

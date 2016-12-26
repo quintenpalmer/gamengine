@@ -6,4 +6,5 @@ extern crate types;
 mod shapesource;
 
 pub use shapesource::ShapeSource;
+pub use shapesource::ShapeType;
 pub use shapesource::parse_shape_source;
