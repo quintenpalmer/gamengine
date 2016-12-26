@@ -13,11 +13,14 @@ pub struct VertexBuffers {
     pub rects: Vec<Box<VertexSpecable>>,
 }
 
-pub struct Rect {
-    loc: LocInfo,
-    width: f32,
-    height: f32,
-    color: Color,
+pub trait VertexSpecable {
+    fn get_vertex_specification(&self) -> VertexSpecification;
+    fn update_offset(&mut self, x: f32, y: f32);
+}
+
+pub struct VertexSpecification {
+    vertices: Vec<GLfloat>,
+    elements: Vec<GLint>,
 }
 
 struct Color {
@@ -49,14 +52,11 @@ impl LocInfo {
     }
 }
 
-pub trait VertexSpecable {
-    fn get_vertex_specification(&self) -> VertexSpecification;
-    fn update_offset(&mut self, x: f32, y: f32);
-}
-
-pub struct VertexSpecification {
-    vertices: Vec<GLfloat>,
-    elements: Vec<GLint>,
+pub struct Rect {
+    loc: LocInfo,
+    width: f32,
+    height: f32,
+    color: Color,
 }
 
 impl Rect {
