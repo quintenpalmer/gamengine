@@ -4,7 +4,7 @@ extern crate csv;
 extern crate types;
 
 #[derive(RustcDecodable)]
-pub struct RectSource {
+pub struct ShapeSource {
     pub x: f32,
     pub y: f32,
     pub width: f32,
@@ -22,12 +22,12 @@ pub struct RectSource {
     pub blue: u8,
 }
 
-pub fn parse_rect_source(filename: &str) -> Result<Vec<RectSource>, csv::Error> {
+pub fn parse_shape_source(filename: &str) -> Result<Vec<ShapeSource>, csv::Error> {
     let mut reader = try!(csv::Reader::from_file(filename));
-    let mut rect_sources: Vec<RectSource> = Vec::new();
+    let mut shape_sources: Vec<ShapeSource> = Vec::new();
     for record in reader.decode() {
-        let rect_source: RectSource = try!(record);
-        rect_sources.push(rect_source);
+        let shape_source: ShapeSource = try!(record);
+        shape_sources.push(shape_source);
     }
-    return Ok(rect_sources);
+    return Ok(shape_sources);
 }

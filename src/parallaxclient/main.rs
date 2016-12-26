@@ -38,18 +38,18 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
     });
 
     println!("reading: {}", filename);
-    let rect_sources = try!(fileformat::parse_rect_source(filename));
+    let shape_sources = try!(fileformat::parse_shape_source(filename));
 
 
     let mut rects: Vec<Box<graphics::VertexSpecable>> = std::vec::Vec::new();
-    for rect_source in rect_sources.iter() {
-        rects.push(Box::new(graphics::Rect::new(rect_source.x,
-                                                rect_source.y,
-                                                rect_source.width,
-                                                rect_source.height,
-                                                rect_source.red,
-                                                rect_source.green,
-                                                rect_source.blue)));
+    for shape_source in shape_sources.iter() {
+        rects.push(Box::new(graphics::Rect::new(shape_source.x,
+                                                shape_source.y,
+                                                shape_source.width,
+                                                shape_source.height,
+                                                shape_source.red,
+                                                shape_source.green,
+                                                shape_source.blue)));
     }
     let mut app = try!(graphics::App::new(600,
                                           600,
@@ -59,8 +59,8 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
                                           rects));
     let mut iteration = 0;
     loop {
-        for x in 0..rect_sources.len() {
-            let ref s = rect_sources[x];
+        for x in 0..shape_sources.len() {
+            let ref s = shape_sources[x];
 
             let new_x = s.x_scale * operate(s.x_func, iteration + s.x_offset, s.x_cycle_size);
             let new_y = s.y_scale * operate(s.y_func, iteration + s.y_offset, s.y_cycle_size);
