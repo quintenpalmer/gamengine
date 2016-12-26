@@ -3,8 +3,26 @@ extern crate csv;
 
 extern crate types;
 
+use rustc_serialize::Decodable;
+use rustc_serialize::Decoder;
+
+pub enum ShapeType {
+    Rect,
+}
+
+impl Decodable for ShapeType {
+    fn decode<D: Decoder>(d: &mut D) -> Result<ShapeType, D::Error> {
+        let s = try!(d.read_str());
+        match s.as_str() {
+            "rect" => Ok(ShapeType::Rect),
+            _ => Err(d.error("invalid math function")),
+        }
+    }
+}
+
 #[derive(RustcDecodable)]
 pub struct ShapeSource {
+    pub shape: ShapeType,
     pub x: f32,
     pub y: f32,
     pub width: f32,
