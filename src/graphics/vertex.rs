@@ -20,9 +20,22 @@ pub struct Rect {
     orig_y: f32,
     width: f32,
     height: f32,
+    color: Color,
+}
+
+struct Color {
     red: u8,
     green: u8,
     blue: u8,
+}
+
+impl Color {
+    fn get_color_floats(&self) -> (f32, f32, f32) {
+        let red = f32::from(self.red) / 255.0;
+        let green = f32::from(self.green) / 255.0;
+        let blue = f32::from(self.blue) / 255.0;
+        return (red, green, blue);
+    }
 }
 
 pub trait VertexSpecable {
@@ -51,9 +64,11 @@ impl Rect {
             orig_y: yloc,
             width: width,
             height: height,
-            red: red,
-            green: green,
-            blue: blue,
+            color: Color {
+                red: red,
+                green: green,
+                blue: blue,
+            },
         };
     }
 
@@ -74,9 +89,7 @@ impl VertexSpecable for Rect {
 
     fn get_vertex_specification(&self) -> VertexSpecification {
         let (top, bottom, left, right) = self.calc_corners();
-        let red = f32::from(self.red) / 255.0;
-        let green = f32::from(self.green) / 255.0;
-        let blue = f32::from(self.blue) / 255.0;
+        let (red, green, blue) = self.color.get_color_floats();
         // top-left, top-right, bottom-left, bottom-right
         let vertices = vec![left, top, red, green, blue, right, top, red, green, blue, right,
                             bottom, red, green, blue, left, bottom, red, green, blue];
