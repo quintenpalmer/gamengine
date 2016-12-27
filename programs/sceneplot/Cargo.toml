@@ -5,4 +5,4 @@ authors = ["Quinten Palmer <quintenpalmer@gmail.com>"]
 
 [dependencies]
 graphics = {path = "../../lib/graphics"}
-plotlib = {path = "../../lib/plotlib"}
+sceneplotlib = {path = "../../lib/sceneplotlib"}
