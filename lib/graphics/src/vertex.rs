@@ -80,7 +80,7 @@ impl VertexBuffers {
             vbo: vbo,
             ebo: ebo,
             rects: rects,
-            vertex_width: 5,
+            vertex_width: 5, /* this is the width of the current definition of a Vertex, the struct above */
         };
 
         v.gen_vertex_buffers();
