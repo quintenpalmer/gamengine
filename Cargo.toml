@@ -1,15 +1,7 @@
-[package]
-name = "parallax"
-version = "0.1.0"
-authors = ["Quinten Palmer <quintenpalmer@gmail.com>"]
+[workspace]
+members = [
+  "lib/graphics/",
+  "lib/plotlib/",
+  "programs/plotting",
+]
 
-[[bin]]
-name = "parallaxclient"
-path = "src/parallaxclient/main.rs"
-test = false
-bench = false
-
-[dependencies]
-graphics = {path = "src/graphics"}
-fileformat = {path = "src/fileformat"}
-types = {path = "src/types"}

@@ -30,7 +30,10 @@ Hopefully both of these are available on your operating system.
 Usage
 -----
 
-```cargo run assets/sin.csv```
+```
+cd programs/plotting/
+cargo run assets/sin.csv
+```
 
 
 Example Scene

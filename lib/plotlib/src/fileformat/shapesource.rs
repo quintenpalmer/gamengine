@@ -1,7 +1,7 @@
 extern crate rustc_serialize;
 extern crate csv;
 
-extern crate types;
+use types;
 
 use rustc_serialize::Decodable;
 use rustc_serialize::Decoder;

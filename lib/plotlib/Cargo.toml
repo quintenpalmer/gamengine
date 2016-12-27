@@ -1,13 +1,12 @@
 [package]
-name = "fileformat"
+name = "plotlib"
 version = "0.0.1"
 authors = ["Quinten Palmer <quintenpalmer@gmail.com>"]
 
 [lib]
-name = "fileformat"
-path = "lib.rs"
+name = "plotlib"
+path = "src/lib.rs"
 
 [dependencies]
 csv = "0.14"
 rustc-serialize = "0.3"
-types = {path = "../../src/types"}
