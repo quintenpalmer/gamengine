@@ -16,6 +16,11 @@ pub trait VertexSpecable {
     fn get_vertex_specification(&self) -> VertexSpecification;
 }
 
+pub struct VertexSpecification {
+    pub vertices: Vec<Vertex>,
+    pub elements: Vec<ElementTriangle>,
+}
+
 pub struct Vertex {
     pub x: GLfloat,
     pub y: GLfloat,
@@ -48,11 +53,6 @@ impl ElementTriangle {
             p3: self.p3 + vertex_offset,
         };
     }
-}
-
-pub struct VertexSpecification {
-    pub vertices: Vec<Vertex>,
-    pub elements: Vec<ElementTriangle>,
 }
 
 impl VertexBuffers {
