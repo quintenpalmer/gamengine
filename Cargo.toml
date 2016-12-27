@@ -2,6 +2,6 @@
 members = [
   "lib/graphics/",
   "lib/plotlib/",
-  "programs/plotting",
+  "programs/sceneplot",
 ]
 

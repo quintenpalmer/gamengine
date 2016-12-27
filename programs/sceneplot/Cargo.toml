@@ -1,5 +1,5 @@
 [package]
-name = "plotting"
+name = "sceneplot"
 version = "0.1.0"
 authors = ["Quinten Palmer <quintenpalmer@gmail.com>"]
 
