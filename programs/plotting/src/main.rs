@@ -74,13 +74,13 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
                                           rects));
     let mut iteration = 0;
     loop {
-        for x in 0..shape_sources.len() {
-            let ref s = shape_sources[x];
+        for i in 0..shape_sources.len() {
+            let ref s = shape_sources[i];
 
             let new_x = s.x_scale * operate(s.x_func, iteration + s.x_offset, s.x_cycle_size);
             let new_y = s.y_scale * operate(s.y_func, iteration + s.y_offset, s.y_cycle_size);
 
-            try!(app.update_rect(x, new_x, new_y));
+            try!(app.update_rect(i, new_x, new_y));
         }
 
         if app.window.handle_events() {
