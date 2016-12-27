@@ -18,9 +18,43 @@ pub trait VertexSpecable {
     fn update_offset(&mut self, x: f32, y: f32);
 }
 
+pub struct Vertex {
+    pub x: GLfloat,
+    pub y: GLfloat,
+    pub red: GLfloat,
+    pub green: GLfloat,
+    pub blue: GLfloat,
+}
+
+impl Vertex {
+    fn get_vec(&self) -> Vec<GLfloat> {
+        return vec![self.x, self.y, self.red, self.green, self.blue];
+    }
+}
+
+pub struct ElementTriangle {
+    pub p1: GLint,
+    pub p2: GLint,
+    pub p3: GLint,
+}
+
+impl ElementTriangle {
+    fn get_vec(&self) -> Vec<GLint> {
+        return vec![self.p1, self.p2, self.p3];
+    }
+
+    fn add_vertex_offset(&self, vertex_offset: i32) -> ElementTriangle {
+        return ElementTriangle {
+            p1: self.p1 + vertex_offset,
+            p2: self.p2 + vertex_offset,
+            p3: self.p3 + vertex_offset,
+        };
+    }
+}
+
 pub struct VertexSpecification {
-    pub vertices: Vec<GLfloat>,
-    pub elements: Vec<GLint>,
+    pub vertices: Vec<Vertex>,
+    pub elements: Vec<ElementTriangle>,
 }
 
 impl VertexBuffers {
@@ -60,10 +94,13 @@ impl VertexBuffers {
         for rect in self.rects.iter() {
             let mut vert_spec = rect.get_vertex_specification();
 
-            let vertex_count = (vert_spec.vertices.len() / (self.vertex_width as usize)) as i32;
+            let vertex_count = vert_spec.vertices.len() as i32;
 
             vertices.append(&mut vert_spec.vertices);
-            elements.append(&mut vert_spec.elements.iter().map(|&x| x + vertex_count_offset).collect());
+            elements.append(&mut vert_spec.elements
+                .iter()
+                .map(|x| x.add_vertex_offset(vertex_count_offset))
+                .collect());
 
             vertex_count_offset += vertex_count;
         }
@@ -76,8 +113,17 @@ impl VertexBuffers {
 
     pub fn gen_vertex_buffers(&self) -> GLsizei {
         let vertex_spec = self.full_vertex_spec();
-        let vertices = vertex_spec.vertices;
-        let elements = vertex_spec.elements;
+        let vertex_structs = vertex_spec.vertices;
+        let element_triangles = vertex_spec.elements;
+
+        let mut vertices: vec::Vec<GLfloat> = vec::Vec::new();
+        for vertex in vertex_structs.iter() {
+            vertices.append(&mut vertex.get_vec());
+        }
+        let mut elements: vec::Vec<GLint> = vec::Vec::new();
+        for element_triangle in element_triangles.iter() {
+            elements.append(&mut element_triangle.get_vec());
+        }
 
         let elem_count = elements.len() as GLsizei;
 

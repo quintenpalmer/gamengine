@@ -1,7 +1,3 @@
-extern crate gl;
-
-use gl::types::*;
-
 use vertex;
 
 struct Color {
@@ -84,8 +80,34 @@ impl vertex::VertexSpecable for SimpleRect {
         let (top, bottom, left, right) = self.calc_corners();
         let (red, green, blue) = self.color.get_color_floats();
         // top-left, top-right, bottom-left, bottom-right
-        let vertices = vec![left, top, red, green, blue, right, top, red, green, blue, right,
-                            bottom, red, green, blue, left, bottom, red, green, blue];
+        let vertices = vec![vertex::Vertex {
+                                x: left,
+                                y: top,
+                                red: red,
+                                green: green,
+                                blue: blue,
+                            },
+                            vertex::Vertex {
+                                x: right,
+                                y: top,
+                                red: red,
+                                green: green,
+                                blue: blue,
+                            },
+                            vertex::Vertex {
+                                x: right,
+                                y: bottom,
+                                red: red,
+                                green: green,
+                                blue: blue,
+                            },
+                            vertex::Vertex {
+                                x: left,
+                                y: bottom,
+                                red: red,
+                                green: green,
+                                blue: blue,
+                            }];
 
         // the elements each point to what 3 points make up a single triangle
         // given the elements below and the vertex data, we see the triangles
@@ -96,7 +118,16 @@ impl vertex::VertexSpecable for SimpleRect {
         //  | /         |   /|
         //  |/          |  / |
         //  o           | o--o
-        let elements: Vec<GLint> = vec![0, 1, 2, 2, 3, 0];
+        let elements = vec![vertex::ElementTriangle {
+                                p1: 0,
+                                p2: 1,
+                                p3: 2,
+                            },
+                            vertex::ElementTriangle {
+                                p1: 2,
+                                p2: 3,
+                                p3: 0,
+                            }];
 
         return vertex::VertexSpecification {
             vertices: vertices,
@@ -157,8 +188,27 @@ impl vertex::VertexSpecable for SimpleTriangle {
         let (top, bottom, left, right, middle) = self.calc_points();
         let (red, green, blue) = self.color.get_color_floats();
         // top-middle, bottom-right, bottom-left
-        let vertices = vec![middle, top, red, green, blue, right, bottom, red, green, blue, left,
-                            bottom, red, green, blue];
+        let vertices = vec![vertex::Vertex {
+                                x: middle,
+                                y: top,
+                                red: red,
+                                green: green,
+                                blue: blue,
+                            },
+                            vertex::Vertex {
+                                x: right,
+                                y: bottom,
+                                red: red,
+                                green: green,
+                                blue: blue,
+                            },
+                            vertex::Vertex {
+                                x: left,
+                                y: bottom,
+                                red: red,
+                                green: green,
+                                blue: blue,
+                            }];
 
         // the elements each point to what 3 points make up a single triangle
         // given the elements below and the vertex data, we see the triangle
@@ -169,7 +219,11 @@ impl vertex::VertexSpecable for SimpleTriangle {
         //  | /
         //  |/
         //  o
-        let elements: Vec<GLint> = vec![0, 1, 2];
+        let elements = vec![vertex::ElementTriangle {
+                                p1: 0,
+                                p2: 1,
+                                p3: 2,
+                            }];
 
         return vertex::VertexSpecification {
             vertices: vertices,
