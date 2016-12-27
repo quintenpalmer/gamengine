@@ -31,3 +31,10 @@ Usage
 -----
 
 ```cargo build && ./target/debug/parallaxclient assets/sin.csv```
+
+
+Example Scene
+-------------
+
+
+![Mountain Scene](docs/eg-mountain-scene.png "Mountain")
