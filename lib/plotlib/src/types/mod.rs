@@ -4,6 +4,8 @@ use rustc_serialize::Decodable;
 use rustc_serialize::Decoder;
 
 use std;
+use std::fmt;
+use std::error;
 
 #[derive(Clone, Copy)]
 pub enum MathFunc {
@@ -44,5 +46,24 @@ impl MathFunc {
             }
             &MathFunc::Sin => ((x / max) * std::f32::consts::PI * 2.0).sin() / 2.5,
         }
+    }
+}
+
+#[derive(Debug)]
+pub struct OutOfBoundsError {}
+
+impl fmt::Display for OutOfBoundsError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "out of bounds error")
+    }
+}
+
+impl error::Error for OutOfBoundsError {
+    fn description(&self) -> &str {
+        return "request to index outside bounds of vector";
+    }
+
+    fn cause(&self) -> Option<&error::Error> {
+        return None;
     }
 }
