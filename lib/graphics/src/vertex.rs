@@ -10,7 +10,6 @@ pub struct VertexBuffers {
     vbo: GLuint,
     ebo: GLuint,
     pub vertex_width: u8,
-    pub rects: Vec<Box<VertexSpecable>>,
 }
 
 pub trait VertexSpecable {
@@ -58,7 +57,7 @@ pub struct VertexSpecification {
 }
 
 impl VertexBuffers {
-    pub fn new(rects: Vec<Box<VertexSpecable>>) -> VertexBuffers {
+    pub fn new(rects: &Vec<Box<VertexSpecable>>) -> VertexBuffers {
         let mut vao = 0;
         let mut vbo = 0;
         let mut ebo = 0;
@@ -79,40 +78,15 @@ impl VertexBuffers {
             vao: vao,
             vbo: vbo,
             ebo: ebo,
-            rects: rects,
             vertex_width: 5, /* this is the width of the current definition of a Vertex, the struct above */
         };
 
-        v.gen_vertex_buffers();
+        v.gen_vertex_buffers(rects);
         return v;
     }
 
-    fn full_vertex_spec(&self) -> VertexSpecification {
-        let mut vertices = vec::Vec::new();
-        let mut elements = vec::Vec::new();
-        let mut vertex_count_offset = 0;
-        for rect in self.rects.iter() {
-            let mut vert_spec = rect.get_vertex_specification();
-
-            let vertex_count = vert_spec.vertices.len() as i32;
-
-            vertices.append(&mut vert_spec.vertices);
-            elements.append(&mut vert_spec.elements
-                .iter()
-                .map(|x| x.add_vertex_offset(vertex_count_offset))
-                .collect());
-
-            vertex_count_offset += vertex_count;
-        }
-
-        return VertexSpecification {
-            vertices: vertices,
-            elements: elements,
-        };
-    }
-
-    pub fn gen_vertex_buffers(&self) -> GLsizei {
-        let vertex_spec = self.full_vertex_spec();
+    pub fn gen_vertex_buffers(&self, rects: &Vec<Box<VertexSpecable>>) -> GLsizei {
+        let vertex_spec = full_vertex_spec(rects);
         let vertex_structs = vertex_spec.vertices;
         let element_triangles = vertex_spec.elements;
 
@@ -155,4 +129,28 @@ impl VertexBuffers {
             gl::DeleteBuffers(1, &self.ebo);
         }
     }
+}
+
+fn full_vertex_spec(rects: &Vec<Box<VertexSpecable>>) -> VertexSpecification {
+    let mut vertices = vec::Vec::new();
+    let mut elements = vec::Vec::new();
+    let mut vertex_count_offset = 0;
+    for rect in rects.iter() {
+        let mut vert_spec = rect.get_vertex_specification();
+
+        let vertex_count = vert_spec.vertices.len() as i32;
+
+        vertices.append(&mut vert_spec.vertices);
+        elements.append(&mut vert_spec.elements
+            .iter()
+            .map(|x| x.add_vertex_offset(vertex_count_offset))
+            .collect());
+
+        vertex_count_offset += vertex_count;
+    }
+
+    return VertexSpecification {
+        vertices: vertices,
+        elements: elements,
+    };
 }

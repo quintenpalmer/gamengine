@@ -66,12 +66,12 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
             }
         }
     }
-    let mut app = try!(graphics::App::new(600,
-                                          600,
-                                          "Parallax Client Demo",
-                                          graphics::SIMPLE_VERTEX_SOURCE,
-                                          graphics::SIMPLE_FRAGMENT_SOURCE,
-                                          rects));
+    let app = try!(graphics::App::new(600,
+                                      600,
+                                      "Parallax Client Demo",
+                                      graphics::SIMPLE_VERTEX_SOURCE,
+                                      graphics::SIMPLE_FRAGMENT_SOURCE,
+                                      &rects));
     let mut iteration = 0;
     loop {
         for i in 0..shape_sources.len() {
@@ -80,7 +80,7 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
             let new_x = s.x_scale * operate(s.x_func, iteration + s.x_offset, s.x_cycle_size);
             let new_y = s.y_scale * operate(s.y_func, iteration + s.y_offset, s.y_cycle_size);
 
-            try!(app.update_rect(i, new_x, new_y));
+            rects[i].update_offset(new_x, new_y);
         }
 
         if app.window.handle_events() {
@@ -88,7 +88,7 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
         }
         iteration += 1;
 
-        try!(app.draw());
+        try!(app.draw(&rects));
     }
     app.close();
     return Ok(());
