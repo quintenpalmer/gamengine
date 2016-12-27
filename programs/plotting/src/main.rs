@@ -23,6 +23,9 @@ impl std::error::Error for ArgError {
     }
 }
 
+trait UpdateSpecable: graphics::VertexSpecable + graphics::Updateable {}
+impl<T> UpdateSpecable for T where T: graphics::VertexSpecable + graphics::Updateable {}
+
 fn main() {
     println!("hello from a client");
     match run_app() {
@@ -43,7 +46,7 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
     let shape_sources = try!(fileformat::parse_shape_source(filename));
 
 
-    let mut rects: Vec<Box<graphics::VertexSpecable>> = std::vec::Vec::new();
+    let mut rects: Vec<Box<UpdateSpecable>> = std::vec::Vec::new();
     for shape_source in shape_sources.iter() {
         match shape_source.shape {
             fileformat::ShapeType::Rect => {

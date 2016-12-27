@@ -14,7 +14,6 @@ pub struct VertexBuffers {
 
 pub trait VertexSpecable {
     fn get_vertex_specification(&self) -> VertexSpecification;
-    fn update_offset(&mut self, x: f32, y: f32);
 }
 
 pub struct Vertex {
@@ -57,7 +56,7 @@ pub struct VertexSpecification {
 }
 
 impl VertexBuffers {
-    pub fn new(rects: &Vec<Box<VertexSpecable>>) -> VertexBuffers {
+    pub fn new<V: VertexSpecable + ?Sized>(rects: &Vec<Box<V>>) -> VertexBuffers {
         let mut vao = 0;
         let mut vbo = 0;
         let mut ebo = 0;
@@ -85,7 +84,7 @@ impl VertexBuffers {
         return v;
     }
 
-    pub fn gen_vertex_buffers(&self, rects: &Vec<Box<VertexSpecable>>) -> GLsizei {
+    pub fn gen_vertex_buffers<V: VertexSpecable + ?Sized>(&self, rects: &Vec<Box<V>>) -> GLsizei {
         let vertex_spec = full_vertex_spec(rects);
         let vertex_structs = vertex_spec.vertices;
         let element_triangles = vertex_spec.elements;
@@ -131,7 +130,7 @@ impl VertexBuffers {
     }
 }
 
-fn full_vertex_spec(rects: &Vec<Box<VertexSpecable>>) -> VertexSpecification {
+fn full_vertex_spec<V: VertexSpecable + ?Sized>(rects: &Vec<Box<V>>) -> VertexSpecification {
     let mut vertices = vec::Vec::new();
     let mut elements = vec::Vec::new();
     let mut vertex_count_offset = 0;

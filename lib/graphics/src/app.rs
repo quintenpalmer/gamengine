@@ -15,13 +15,14 @@ pub struct App {
 }
 
 impl App {
-    pub fn new<T: Into<String>>(width: u32,
-                                height: u32,
-                                title: T,
-                                vertex_source: shader::ShaderSource,
-                                fragment_source: shader::ShaderSource,
-                                rects: &Vec<Box<vertex::VertexSpecable>>)
-                                -> Result<App, Box<error::Error>> {
+    pub fn new<T: Into<String>, V: vertex::VertexSpecable + ?Sized>
+        (width: u32,
+         height: u32,
+         title: T,
+         vertex_source: shader::ShaderSource,
+         fragment_source: shader::ShaderSource,
+         rects: &Vec<Box<V>>)
+         -> Result<App, Box<error::Error>> {
 
         let window = try!(window::Window::new(width, height, title));
 
@@ -43,9 +44,9 @@ impl App {
         });
     }
 
-    pub fn draw(&self,
-                rects: &Vec<Box<vertex::VertexSpecable>>)
-                -> Result<(), glutin::ContextError> {
+    pub fn draw<V: vertex::VertexSpecable + ?Sized>(&self,
+                                                    rects: &Vec<Box<V>>)
+                                                    -> Result<(), glutin::ContextError> {
         // build and copy the vertex data
         let element_count = self.vertices.gen_vertex_buffers(rects);
         unsafe {

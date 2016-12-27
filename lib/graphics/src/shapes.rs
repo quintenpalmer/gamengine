@@ -1,5 +1,9 @@
 use vertex;
 
+pub trait Updateable {
+    fn update_offset(&mut self, x: f32, y: f32);
+}
+
 struct Color {
     red: u8,
     green: u8,
@@ -71,11 +75,13 @@ impl SimpleRect {
     }
 }
 
-impl vertex::VertexSpecable for SimpleRect {
+impl Updateable for SimpleRect {
     fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
         self.loc.update_offset(x_offset, y_offset)
     }
+}
 
+impl vertex::VertexSpecable for SimpleRect {
     fn get_vertex_specification(&self) -> vertex::VertexSpecification {
         let (top, bottom, left, right) = self.calc_corners();
         let (red, green, blue) = self.color.get_color_floats();
@@ -179,11 +185,13 @@ impl SimpleTriangle {
     }
 }
 
-impl vertex::VertexSpecable for SimpleTriangle {
+impl Updateable for SimpleTriangle {
     fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
         self.loc.update_offset(x_offset, y_offset)
     }
+}
 
+impl vertex::VertexSpecable for SimpleTriangle {
     fn get_vertex_specification(&self) -> vertex::VertexSpecification {
         let (top, bottom, left, right, middle) = self.calc_points();
         let (red, green, blue) = self.color.get_color_floats();
