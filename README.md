@@ -23,8 +23,8 @@ rustc 1.12.0
 
 
 Hopefully both of these are available on your operating system.
-* OSX: Brew for
-* Linux distribution: yum/dnf/pacman/etc for your
+* OSX: Brew
+* Linux distribution: yum/dnf/pacman/etc
 * Windows: Download from the install page on https://www.rust-lang.org/en-US/
 
 Usage
