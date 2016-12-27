@@ -30,7 +30,7 @@ Hopefully both of these are available on your operating system.
 Usage
 -----
 
-```cargo build && ./target/debug/parallaxclient assets/sin.csv```
+```cargo run assets/sin.csv```
 
 
 Example Scene
