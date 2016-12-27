@@ -52,14 +52,14 @@ impl LocInfo {
     }
 }
 
-pub struct Rect {
+pub struct SimpleRect {
     loc: LocInfo,
     width: f32,
     height: f32,
     color: Color,
 }
 
-impl Rect {
+impl SimpleRect {
     pub fn new(xloc: f32,
                yloc: f32,
                width: f32,
@@ -67,8 +67,8 @@ impl Rect {
                red: u8,
                green: u8,
                blue: u8)
-               -> Rect {
-        return Rect {
+               -> SimpleRect {
+        return SimpleRect {
             loc: LocInfo {
                 x: xloc,
                 y: yloc,
@@ -94,7 +94,7 @@ impl Rect {
     }
 }
 
-impl VertexSpecable for Rect {
+impl VertexSpecable for SimpleRect {
     fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
         self.loc.update_offset(x_offset, y_offset)
     }
@@ -124,14 +124,14 @@ impl VertexSpecable for Rect {
     }
 }
 
-pub struct Triangle {
+pub struct SimpleTriangle {
     loc: LocInfo,
     width: f32,
     height: f32,
     color: Color,
 }
 
-impl Triangle {
+impl SimpleTriangle {
     pub fn new(xloc: f32,
                yloc: f32,
                width: f32,
@@ -139,8 +139,8 @@ impl Triangle {
                red: u8,
                green: u8,
                blue: u8)
-               -> Triangle {
-        return Triangle {
+               -> SimpleTriangle {
+        return SimpleTriangle {
             loc: LocInfo {
                 x: xloc,
                 y: yloc,
@@ -167,7 +167,7 @@ impl Triangle {
     }
 }
 
-impl VertexSpecable for Triangle {
+impl VertexSpecable for SimpleTriangle {
     fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
         self.loc.update_offset(x_offset, y_offset)
     }

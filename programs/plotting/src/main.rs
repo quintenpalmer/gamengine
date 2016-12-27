@@ -47,22 +47,22 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
     for shape_source in shape_sources.iter() {
         match shape_source.shape {
             fileformat::ShapeType::Rect => {
-                rects.push(Box::new(graphics::Rect::new(shape_source.x,
-                                                        shape_source.y,
-                                                        shape_source.width,
-                                                        shape_source.height,
-                                                        shape_source.red,
-                                                        shape_source.green,
-                                                        shape_source.blue)))
+                rects.push(Box::new(graphics::SimpleRect::new(shape_source.x,
+                                                              shape_source.y,
+                                                              shape_source.width,
+                                                              shape_source.height,
+                                                              shape_source.red,
+                                                              shape_source.green,
+                                                              shape_source.blue)))
             }
             fileformat::ShapeType::Triangle => {
-                rects.push(Box::new(graphics::Triangle::new(shape_source.x,
-                                                            shape_source.y,
-                                                            shape_source.width,
-                                                            shape_source.height,
-                                                            shape_source.red,
-                                                            shape_source.green,
-                                                            shape_source.blue)))
+                rects.push(Box::new(graphics::SimpleTriangle::new(shape_source.x,
+                                                                  shape_source.y,
+                                                                  shape_source.width,
+                                                                  shape_source.height,
+                                                                  shape_source.red,
+                                                                  shape_source.green,
+                                                                  shape_source.blue)))
             }
         }
     }
