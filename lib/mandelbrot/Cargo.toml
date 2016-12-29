@@ -5,3 +5,4 @@ authors = ["Quinten Palmer <quintenpalmer@gmail.com>"]
 
 [dependencies]
 num = "0.1"
+image = "0.10"
