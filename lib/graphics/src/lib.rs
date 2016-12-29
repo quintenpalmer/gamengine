@@ -14,3 +14,6 @@ pub use shapes::SimpleRect;
 pub use shapes::SimpleTriangle;
 pub use shapes::Updateable;
 pub use vertex::VertexSpecable;
+pub use vertex::VertexSpecification;
+pub use vertex::Vertex;
+pub use vertex::ElementTriangle;
