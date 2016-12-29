@@ -4,5 +4,6 @@ members = [
   "lib/sceneplotlib/",
   "lib/mandelbrot/",
   "programs/sceneplot",
+  "programs/mandlebrotviewer",
 ]
 
