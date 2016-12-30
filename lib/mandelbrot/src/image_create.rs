@@ -17,8 +17,9 @@ pub fn gen_png(frame: Frame) -> image::RgbaImage {
     return imagebuf;
 }
 
-pub fn write_png(frame: Frame) -> Result<(), Box<error::Error>> {
-    let ref mut fout = try!(fs::File::create(path::Path::new(&format!("{}x{}_mandelbrot.png",
+pub fn write_png(prefix: &str, frame: Frame) -> Result<(), Box<error::Error>> {
+    let ref mut fout = try!(fs::File::create(path::Path::new(&format!("{}_{}x{}_mandelbrot.png",
+                                                                      prefix,
                                                                       frame.screen_width,
                                                                       frame.screen_height))));
     let imagebuf = gen_png(frame);
