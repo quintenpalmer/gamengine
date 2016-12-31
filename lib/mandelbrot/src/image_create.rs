@@ -6,33 +6,36 @@ use std::error;
 
 use eq;
 
-pub fn gen_png(frame: Frame) -> image::RgbaImage {
+pub fn gen_png(frame: Frame, iterations: u32) -> image::RgbaImage {
     let mut imagebuf: image::RgbaImage = image::ImageBuffer::new(frame.screen_width,
                                                                  frame.screen_height);
     for (raw_x, raw_y, pixel) in imagebuf.enumerate_pixels_mut() {
         let (x, y) = frame.get_coord_for_pixel(raw_x, raw_y);
-        let divergence = eq::mandelbrot_divergence(x, y);
-        *pixel = gen_pixel(divergence);
+        let divergence = eq::mandelbrot_divergence(x, y, iterations);
+        *pixel = gen_pixel(divergence, iterations);
     }
     return imagebuf;
 }
 
-pub fn write_png(prefix: &str, frame: Frame) -> Result<(), Box<error::Error>> {
+pub fn write_png(prefix: &str, frame: Frame, iterations: u32) -> Result<(), Box<error::Error>> {
     let ref mut fout = try!(fs::File::create(path::Path::new(&format!("{}_{}x{}_mandelbrot.png",
                                                                       prefix,
                                                                       frame.screen_width,
                                                                       frame.screen_height))));
-    let imagebuf = gen_png(frame);
+    let imagebuf = gen_png(frame, iterations);
     try!(image::ImageRgba8(imagebuf).save(fout, image::PNG));
     return Ok(());
 }
 
-fn gen_pixel(divergence: f64) -> image::Rgba<u8> {
-    let div_u8 = divergence as u8;
-    if div_u8 == 0 {
-        return image::Rgba([0, 0, 0, 255]);
-    } else {
-        return image::Rgba([0, 255 - divergence as u8, 255 - divergence as u8, 255]);
+fn gen_pixel(m_divergence: Result<(), u32>, iterations: u32) -> image::Rgba<u8> {
+    match m_divergence {
+        Ok(()) => {
+        image::Rgba([0, 0, 0, 255])
+        }
+        Err(divergence) => {
+            let div_u8 = (((divergence * 255) / iterations)) as u8;
+            image::Rgba([0, 255 - div_u8, 255 - div_u8, 255])
+        }
     }
 }
 

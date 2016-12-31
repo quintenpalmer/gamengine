@@ -77,6 +77,7 @@ fn gen_photo() -> Result<(), Box<error::Error>> {
                                                         frame.x_min,
                                                         frame.x_max,
                                                         frame.y_min,
-                                                        frame.y_max));
+                                                        frame.y_max),
+                                 250);
 
 }
