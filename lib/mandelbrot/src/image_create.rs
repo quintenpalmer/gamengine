@@ -31,7 +31,7 @@ pub fn write_png(prefix: &str, frame: Frame, iterations: u32) -> Result<(), Box<
 fn gen_pixel(m_divergence: Result<(), u32>, iterations: u32) -> image::Rgba<u8> {
     match m_divergence {
         Ok(()) => {
-        image::Rgba([0, 0, 0, 255])
+            image::Rgba([0, 0, 0, 255])
         }
         Err(divergence) => {
             let div_u8 = (((divergence * 255) / iterations)) as u8;
