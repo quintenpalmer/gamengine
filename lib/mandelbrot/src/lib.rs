@@ -6,6 +6,7 @@ extern crate image;
 mod image_create;
 mod eq;
 mod fileformat;
+mod color_calc;
 
 pub use image_create::gen_png;
 pub use image_create::write_png;

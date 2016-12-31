@@ -5,6 +5,7 @@ use std::path;
 use std::error;
 
 use eq;
+use color_calc;
 
 pub fn gen_png(frame: Frame, iterations: u32) -> image::RgbaImage {
     let mut imagebuf: image::RgbaImage = image::ImageBuffer::new(frame.screen_width,
@@ -34,7 +35,7 @@ fn gen_pixel(m_divergence: Result<(), u32>, iterations: u32) -> image::Rgba<u8> 
         }
         Err(divergence) => {
             let div_u8 = (((divergence * 255) / iterations)) as u8;
-            image::Rgba([0, 255 - div_u8, 255 - div_u8, 255])
+            color_calc::yellow_to_blue(div_u8)
         }
     }
 }
