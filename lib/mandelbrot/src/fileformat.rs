@@ -32,6 +32,7 @@ pub struct Frame {
     pub x_max: f64,
     pub y_min: f64,
     pub y_max: f64,
+    pub iterations: u32,
 }
 
 pub fn parse_frame(filename: &str) -> Result<Frame, Box<error::Error>> {
