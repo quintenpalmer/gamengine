@@ -86,34 +86,34 @@ impl vertex::VertexSpecable for SimpleRect {
         let (top, bottom, left, right) = self.calc_corners();
         let (red, green, blue) = self.color.get_color_floats();
         // top-left, top-right, bottom-left, bottom-right
-        let vertices = vec![vertex::Vertex {
-                                x: left,
-                                y: top,
-                                red: red,
-                                green: green,
-                                blue: blue,
-                            },
-                            vertex::Vertex {
-                                x: right,
-                                y: top,
-                                red: red,
-                                green: green,
-                                blue: blue,
-                            },
-                            vertex::Vertex {
-                                x: right,
-                                y: bottom,
-                                red: red,
-                                green: green,
-                                blue: blue,
-                            },
-                            vertex::Vertex {
-                                x: left,
-                                y: bottom,
-                                red: red,
-                                green: green,
-                                blue: blue,
-                            }];
+        let vertices: Vec<Box<vertex::Vertex>> = vec![Box::new(vertex::ColorVertex {
+                                                          x: left,
+                                                          y: top,
+                                                          red: red,
+                                                          green: green,
+                                                          blue: blue,
+                                                      }),
+                                                      Box::new(vertex::ColorVertex {
+                                                          x: right,
+                                                          y: top,
+                                                          red: red,
+                                                          green: green,
+                                                          blue: blue,
+                                                      }),
+                                                      Box::new(vertex::ColorVertex {
+                                                          x: right,
+                                                          y: bottom,
+                                                          red: red,
+                                                          green: green,
+                                                          blue: blue,
+                                                      }),
+                                                      Box::new(vertex::ColorVertex {
+                                                          x: left,
+                                                          y: bottom,
+                                                          red: red,
+                                                          green: green,
+                                                          blue: blue,
+                                                      })];
 
         // the elements each point to what 3 points make up a single triangle
         // given the elements below and the vertex data, we see the triangles
@@ -196,27 +196,27 @@ impl vertex::VertexSpecable for SimpleTriangle {
         let (top, bottom, left, right, middle) = self.calc_points();
         let (red, green, blue) = self.color.get_color_floats();
         // top-middle, bottom-right, bottom-left
-        let vertices = vec![vertex::Vertex {
-                                x: middle,
-                                y: top,
-                                red: red,
-                                green: green,
-                                blue: blue,
-                            },
-                            vertex::Vertex {
-                                x: right,
-                                y: bottom,
-                                red: red,
-                                green: green,
-                                blue: blue,
-                            },
-                            vertex::Vertex {
-                                x: left,
-                                y: bottom,
-                                red: red,
-                                green: green,
-                                blue: blue,
-                            }];
+        let vertices: Vec<Box<vertex::Vertex>> = vec![Box::new(vertex::ColorVertex {
+                                                          x: middle,
+                                                          y: top,
+                                                          red: red,
+                                                          green: green,
+                                                          blue: blue,
+                                                      }),
+                                                      Box::new(vertex::ColorVertex {
+                                                          x: right,
+                                                          y: bottom,
+                                                          red: red,
+                                                          green: green,
+                                                          blue: blue,
+                                                      }),
+                                                      Box::new(vertex::ColorVertex {
+                                                          x: left,
+                                                          y: bottom,
+                                                          red: red,
+                                                          green: green,
+                                                          blue: blue,
+                                                      })];
 
         // the elements each point to what 3 points make up a single triangle
         // given the elements below and the vertex data, we see the triangle

@@ -17,11 +17,15 @@ pub trait VertexSpecable {
 }
 
 pub struct VertexSpecification {
-    pub vertices: Vec<Vertex>,
+    pub vertices: Vec<Box<Vertex>>,
     pub elements: Vec<ElementTriangle>,
 }
 
-pub struct Vertex {
+pub trait Vertex {
+    fn get_vec(&self) -> Vec<GLfloat>;
+}
+
+pub struct ColorVertex {
     pub x: GLfloat,
     pub y: GLfloat,
     pub red: GLfloat,
@@ -29,7 +33,7 @@ pub struct Vertex {
     pub blue: GLfloat,
 }
 
-impl Vertex {
+impl Vertex for ColorVertex {
     fn get_vec(&self) -> Vec<GLfloat> {
         return vec![self.x, self.y, self.red, self.green, self.blue];
     }
