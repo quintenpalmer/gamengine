@@ -21,6 +21,7 @@ impl App {
          title: T,
          vertex_source: shader::ShaderSource,
          fragment_source: shader::ShaderSource,
+         vertex_width: u8,
          rects: &Vec<Box<V>>)
          -> Result<App, Box<error::Error>> {
 
@@ -33,7 +34,7 @@ impl App {
                                                   shader::GLShaderEnum::FragmentShader);
         let program = shader::Program::new(vertex_shader, fragment_shader);
 
-        let vertex_data = vertex::VertexBuffers::new(rects);
+        let vertex_data = vertex::VertexBuffers::new(rects, vertex_width);
 
         program.link_vertex(&vertex_data);
 

@@ -9,7 +9,7 @@ pub struct VertexBuffers {
     vao: GLuint,
     vbo: GLuint,
     ebo: GLuint,
-    pub vertex_width: u8,
+    pub vertex_width: u8, // this is the width of the concrete struct that satisfies the Vertex trait
 }
 
 pub trait VertexSpecable {
@@ -60,7 +60,7 @@ impl ElementTriangle {
 }
 
 impl VertexBuffers {
-    pub fn new<V: VertexSpecable + ?Sized>(rects: &Vec<Box<V>>) -> VertexBuffers {
+    pub fn new<V: VertexSpecable + ?Sized>(rects: &Vec<Box<V>>, vertex_width: u8) -> VertexBuffers {
         let mut vao = 0;
         let mut vbo = 0;
         let mut ebo = 0;
@@ -81,7 +81,7 @@ impl VertexBuffers {
             vao: vao,
             vbo: vbo,
             ebo: ebo,
-            vertex_width: 5, /* this is the width of the current definition of a Vertex, the struct above */
+            vertex_width: vertex_width,
         };
 
         v.gen_vertex_buffers(rects);

@@ -74,6 +74,7 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
                                       "Parallax Client Demo",
                                       graphics::SIMPLE_VERTEX_SOURCE,
                                       graphics::SIMPLE_FRAGMENT_SOURCE,
+                                      5, // this is the width of a ColorVertex: x, y, red, green, blue
                                       &rects));
     let mut iteration = 0;
     loop {
