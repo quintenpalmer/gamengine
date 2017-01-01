@@ -15,15 +15,13 @@ pub struct App {
 }
 
 impl App {
-    pub fn new<T: Into<String>, V: vertex::VertexSpecable + ?Sized>
-        (width: u32,
-         height: u32,
-         title: T,
-         vertex_source: shader::ShaderSource,
-         fragment_source: shader::ShaderSource,
-         vertex_width: u8,
-         rects: &Vec<Box<V>>)
-         -> Result<App, Box<error::Error>> {
+    pub fn new<T: Into<String>>(width: u32,
+                                height: u32,
+                                title: T,
+                                vertex_source: shader::ShaderSource,
+                                fragment_source: shader::ShaderSource,
+                                vertex_width: u8)
+                                -> Result<App, Box<error::Error>> {
 
         let window = try!(window::Window::new(width, height, title));
 
@@ -34,7 +32,7 @@ impl App {
                                                   shader::GLShaderEnum::FragmentShader);
         let program = shader::Program::new(vertex_shader, fragment_shader);
 
-        let vertex_data = vertex::VertexBuffers::new(rects, vertex_width);
+        let vertex_data = vertex::VertexBuffers::new(vertex_width);
 
         program.link_vertex(&vertex_data);
 

@@ -60,7 +60,7 @@ impl ElementTriangle {
 }
 
 impl VertexBuffers {
-    pub fn new<V: VertexSpecable + ?Sized>(rects: &Vec<Box<V>>, vertex_width: u8) -> VertexBuffers {
+    pub fn new(vertex_width: u8) -> VertexBuffers {
         let mut vao = 0;
         let mut vbo = 0;
         let mut ebo = 0;
@@ -83,8 +83,10 @@ impl VertexBuffers {
             ebo: ebo,
             vertex_width: vertex_width,
         };
-
-        v.gen_vertex_buffers(rects);
+        unsafe {
+            gl::BindBuffer(gl::ARRAY_BUFFER, v.vbo);
+            gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, v.ebo);
+        }
         return v;
     }
 
@@ -106,13 +108,11 @@ impl VertexBuffers {
 
         unsafe {
             // copy the vertex data to the Vertex Buffer Object
-            gl::BindBuffer(gl::ARRAY_BUFFER, self.vbo);
             gl::BufferData(gl::ARRAY_BUFFER,
                            (vertices.len() * mem::size_of::<GLfloat>()) as GLsizeiptr,
                            mem::transmute(&vertices[0]),
                            gl::STATIC_DRAW);
 
-            gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, self.ebo);
             gl::BufferData(gl::ELEMENT_ARRAY_BUFFER,
                            (elements.len() * mem::size_of::<GLint>()) as GLsizeiptr,
                            mem::transmute(&elements[0]),
