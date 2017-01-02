@@ -2,6 +2,7 @@ extern crate gl;
 extern crate glutin;
 
 mod app;
+mod program;
 mod shader;
 mod shader_source;
 mod shapes;

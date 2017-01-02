@@ -4,7 +4,7 @@ extern crate glutin;
 use std::error;
 use std::ptr;
 
-use shader;
+use program;
 use shader_source;
 use vertex;
 use window;
@@ -66,7 +66,7 @@ pub enum RenderingSource {
 }
 
 struct Renderer {
-    program: shader::Program,
+    program: program::Program,
     vertices: vertex::VertexBuffers,
 }
 
@@ -74,10 +74,10 @@ impl Renderer {
     fn new(p_src: shader_source::RenderingPipelineSource) -> Renderer {
         let vertex_buffers = vertex::VertexBuffers::new(p_src.vertex_width);
 
-        let program = shader::Program::new(p_src.vertex_glsl,
-                                           p_src.fragment_glsl,
-                                           p_src.all_vertex_attrs,
-                                           &vertex_buffers);
+        let program = program::Program::new(p_src.vertex_glsl,
+                                            p_src.fragment_glsl,
+                                            p_src.all_vertex_attrs,
+                                            &vertex_buffers);
 
         return Renderer {
             program: program,
