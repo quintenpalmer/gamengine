@@ -45,7 +45,6 @@ pub struct RenderingPipelineSource {
 pub struct VertexAttribute {
     pub var_name: &'static str,
     pub stride: GLsizei,
-    pub offset: usize,
 }
 
 pub fn color_pipeline_source() -> RenderingPipelineSource {
@@ -55,12 +54,10 @@ pub fn color_pipeline_source() -> RenderingPipelineSource {
         all_vertex_attrs: vec![VertexAttribute {
                                    var_name: "position",
                                    stride: 2,
-                                   offset: 0,
                                },
                                VertexAttribute {
                                    var_name: "color",
                                    stride: 3,
-                                   offset: 2,
                                }],
         vertex_width: 5, // this is the width of a ColorVertex: x, y, red, green, blue
     };

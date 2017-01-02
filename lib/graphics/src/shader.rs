@@ -56,15 +56,18 @@ impl Program {
             gl::UseProgram(self.addr);
             gl::BindFragDataLocation(self.addr, 0, CString::new("out_color").unwrap().as_ptr());
         }
+        let mut total_offset = 0;
         for vertex_attr in vertex_attrs.iter() {
-
-            self.define_single_vertex_attribute(vbs, vertex_attr);
+            let offset = self.define_single_vertex_attribute(vbs, vertex_attr, total_offset);
+            total_offset += offset;
         }
     }
 
     pub fn define_single_vertex_attribute(&self,
                                           vbs: &vertex::VertexBuffers,
-                                          vertex_attr: &shader_source::VertexAttribute) {
+                                          vertex_attr: &shader_source::VertexAttribute,
+                                          offset: usize)
+                                          -> usize {
         unsafe {
             // Specify the layout of the vertex data
             let attr = gl::GetAttribLocation(self.addr,
@@ -73,8 +76,9 @@ impl Program {
             gl::VertexAttribPointer(attr as GLuint, vertex_attr.stride, gl::FLOAT,
                                     gl::FALSE as GLboolean,
                                     ((vbs.vertex_width as GLsizei) * (mem::size_of::<GLfloat>() as GLsizei)) as i32,
-                                    (vertex_attr.offset * mem::size_of::<GLfloat>()) as *const _);
+                                    (offset * mem::size_of::<GLfloat>()) as *const _);
         }
+        return vertex_attr.stride as usize;
     }
 
     pub fn close(&self) {
