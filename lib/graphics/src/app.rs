@@ -10,7 +10,7 @@ use vertex;
 use window;
 
 pub struct App {
-    pub window: window::Window,
+    window: window::Window,
     renderer: Renderer,
 }
 
@@ -50,6 +50,10 @@ impl App {
 
         try!(self.window.swap_buffers());
         return Ok(());
+    }
+
+    pub fn handle_events(&self) -> bool {
+        return self.window.handle_events();
     }
 
     pub fn close(&self) {

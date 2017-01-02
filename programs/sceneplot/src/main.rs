@@ -85,7 +85,7 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
             rects[i].update_offset(new_x, new_y);
         }
 
-        if app.window.handle_events() {
+        if app.handle_events() {
             break;
         }
         iteration += 1;
