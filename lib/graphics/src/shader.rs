@@ -50,7 +50,7 @@ impl Program {
     }
 
     pub fn define_vertex_attribute_layout(&self,
-                                          vd: &vertex::VertexBuffers,
+                                          vbs: &vertex::VertexBuffers,
                                           vertex_attrs: Vec<shader_source::VertexAttribute>) {
         unsafe {
             gl::UseProgram(self.addr);
@@ -58,12 +58,12 @@ impl Program {
         }
         for vertex_attr in vertex_attrs.iter() {
 
-            self.define_single_vertex_attribute(vd, vertex_attr);
+            self.define_single_vertex_attribute(vbs, vertex_attr);
         }
     }
 
     pub fn define_single_vertex_attribute(&self,
-                                          vd: &vertex::VertexBuffers,
+                                          vbs: &vertex::VertexBuffers,
                                           vertex_attr: &shader_source::VertexAttribute) {
         unsafe {
             // Specify the layout of the vertex data
@@ -72,7 +72,7 @@ impl Program {
             gl::EnableVertexAttribArray(attr as GLuint);
             gl::VertexAttribPointer(attr as GLuint, vertex_attr.stride, gl::FLOAT,
                                     gl::FALSE as GLboolean,
-                                    ((vd.vertex_width as GLsizei) * (mem::size_of::<GLfloat>() as GLsizei)) as i32,
+                                    ((vbs.vertex_width as GLsizei) * (mem::size_of::<GLfloat>() as GLsizei)) as i32,
                                     (vertex_attr.offset * mem::size_of::<GLfloat>()) as *const _);
         }
     }
