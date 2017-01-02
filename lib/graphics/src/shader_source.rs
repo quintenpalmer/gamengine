@@ -52,22 +52,19 @@ pub fn color_pipeline_source() -> RenderingPipelineSource {
     return RenderingPipelineSource {
         vertex_glsl: GLVertexShader { glsl: COLOR_VS_GLSL },
         fragment_glsl: GLFragmentShader { glsl: COLOR_FS_GLSL },
-        all_vertex_attrs: vec![POSITION_VERTEX_ATTR, COLOR_VERTEX_ATTR],
+        all_vertex_attrs: vec![VertexAttribute {
+                                   var_name: "position",
+                                   stride: 2,
+                                   offset: 0,
+                               },
+                               VertexAttribute {
+                                   var_name: "color",
+                                   stride: 3,
+                                   offset: 2,
+                               }],
         vertex_width: 5, // this is the width of a ColorVertex: x, y, red, green, blue
     };
 }
-
-const POSITION_VERTEX_ATTR: VertexAttribute = VertexAttribute {
-    var_name: "position",
-    stride: 2,
-    offset: 0,
-};
-
-const COLOR_VERTEX_ATTR: VertexAttribute = VertexAttribute {
-    var_name: "color",
-    stride: 3,
-    offset: 2,
-};
 
 const COLOR_VS_GLSL: &'static str = r#"#version 150
     in vec2 position;
