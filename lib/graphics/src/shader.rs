@@ -17,9 +17,15 @@ pub struct Program {
 }
 
 impl Program {
-    pub fn new(vs: Shader, fs: Shader) -> Program {
+    pub fn new(vertex_glsl: shader_source::GLVertexShader,
+               fragment_glsl: shader_source::GLFragmentShader,
+               all_vertex_attrs: Vec<shader_source::VertexAttribute>,
+               vbs: &vertex::VertexBuffers)
+               -> Program {
         unsafe {
             let program = gl::CreateProgram();
+            let vs = Shader::new(vertex_glsl);
+            let fs = Shader::new(fragment_glsl);
             gl::AttachShader(program, vs.addr);
             gl::AttachShader(program, fs.addr);
             gl::LinkProgram(program);
@@ -41,17 +47,19 @@ impl Program {
                 panic!("{}",
                        str::from_utf8(&buf).ok().expect("ProgramInfoLog not valid utf8"));
             }
-            return Program {
+            let p = Program {
                 addr: program,
                 vertex_shader: vs,
                 fragment_shader: fs,
             };
+            p.define_vertex_attribute_layout(vbs, all_vertex_attrs);
+            return p;
         }
     }
 
-    pub fn define_vertex_attribute_layout(&self,
-                                          vbs: &vertex::VertexBuffers,
-                                          vertex_attrs: Vec<shader_source::VertexAttribute>) {
+    fn define_vertex_attribute_layout(&self,
+                                      vbs: &vertex::VertexBuffers,
+                                      vertex_attrs: Vec<shader_source::VertexAttribute>) {
         unsafe {
             gl::UseProgram(self.addr);
             gl::BindFragDataLocation(self.addr, 0, CString::new("out_color").unwrap().as_ptr());
@@ -63,11 +71,11 @@ impl Program {
         }
     }
 
-    pub fn define_single_vertex_attribute(&self,
-                                          vbs: &vertex::VertexBuffers,
-                                          vertex_attr: &shader_source::VertexAttribute,
-                                          offset: usize)
-                                          -> usize {
+    fn define_single_vertex_attribute(&self,
+                                      vbs: &vertex::VertexBuffers,
+                                      vertex_attr: &shader_source::VertexAttribute,
+                                      offset: usize)
+                                      -> usize {
         unsafe {
             // Specify the layout of the vertex data
             let attr = gl::GetAttribLocation(self.addr,
