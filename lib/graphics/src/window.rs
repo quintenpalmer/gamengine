@@ -1,5 +1,5 @@
-extern crate glutin;
 extern crate gl;
+extern crate glutin;
 
 pub struct Window {
     window: glutin::Window,

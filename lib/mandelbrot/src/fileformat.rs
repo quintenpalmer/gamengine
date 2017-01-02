@@ -1,8 +1,8 @@
-extern crate rustc_serialize;
 extern crate csv;
+extern crate rustc_serialize;
 
-use std::fmt;
 use std::error;
+use std::fmt;
 
 #[derive(Debug)]
 struct MultiFrameError {}

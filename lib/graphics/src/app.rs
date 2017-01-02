@@ -1,13 +1,13 @@
-extern crate glutin;
 extern crate gl;
+extern crate glutin;
 
-use std::ptr;
 use std::error;
+use std::ptr;
 
-use window;
 use shader;
 use shader_source;
 use vertex;
+use window;
 
 pub struct App {
     pub window: window::Window,

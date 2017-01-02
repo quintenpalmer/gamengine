@@ -1,14 +1,14 @@
 extern crate gl;
 
+use std::ffi::CString;
+use std::mem;
 use std::ptr;
 use std::str;
-use std::mem;
-use std::ffi::CString;
 
 use gl::types::*;
 
-use vertex;
 use shader_source;
+use vertex;
 
 pub struct Program {
     addr: GLuint,

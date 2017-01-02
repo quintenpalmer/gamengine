@@ -3,7 +3,7 @@ extern crate rustc_serialize;
 use rustc_serialize::Decodable;
 use rustc_serialize::Decoder;
 
-use std;
+use std::f32;
 use std::fmt;
 use std::error;
 
@@ -44,7 +44,7 @@ impl MathFunc {
                 let non_minimized = -((x - half_max).powi(2)) + half_max.powi(2);
                 non_minimized / half_max.powi(2)
             }
-            &MathFunc::Sin => ((x / max) * std::f32::consts::PI * 2.0).sin() / 2.5,
+            &MathFunc::Sin => ((x / max) * f32::consts::PI * 2.0).sin() / 2.5,
         }
     }
 }

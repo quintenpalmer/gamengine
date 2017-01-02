@@ -1,5 +1,5 @@
-extern crate glutin;
 extern crate gl;
+extern crate glutin;
 
 mod app;
 mod shader;

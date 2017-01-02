@@ -2,8 +2,8 @@ extern crate gl;
 
 use gl::types::*;
 
-use std::vec;
 use std::mem;
+use std::vec;
 
 pub struct VertexBuffers {
     vao: GLuint,
