@@ -2,11 +2,11 @@ extern crate glutin;
 extern crate gl;
 
 mod app;
-mod window;
-mod vertex;
 mod shader;
 mod shader_source;
 mod shapes;
+mod vertex;
+mod window;
 
 pub use app::App;
 pub use app::RenderingSource;
