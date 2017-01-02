@@ -6,6 +6,7 @@ use std::error;
 
 use window;
 use shader;
+use shader_source;
 use vertex;
 
 pub struct App {
@@ -26,8 +27,8 @@ impl App {
 
         let renderer = match source {
             RenderingSource::ColorRenderingSource => {
-                Renderer::new(shader::COLOR_VERTEX_SOURCE,
-                              shader::COLOR_FRAGMENT_SOURCE,
+                Renderer::new(shader_source::COLOR_VERTEX_SOURCE,
+                              shader_source::COLOR_FRAGMENT_SOURCE,
                               5 /* this is the width of a ColorVertex: x, y, red, green, blue */)
             }
         };
@@ -68,8 +69,8 @@ struct Renderer {
 }
 
 impl Renderer {
-    fn new(vertex_source: shader::ShaderSource,
-           fragment_source: shader::ShaderSource,
+    fn new(vertex_source: shader_source::ShaderSource,
+           fragment_source: shader_source::ShaderSource,
            vertex_width: u8)
            -> Renderer {
 
