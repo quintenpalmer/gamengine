@@ -27,9 +27,7 @@ impl App {
 
         let renderer = match source {
             RenderingSource::ColorRenderingSource => {
-                Renderer::new(shader_source::COLOR_VERTEX_SOURCE,
-                              shader_source::COLOR_FRAGMENT_SOURCE,
-                              5 /* this is the width of a ColorVertex: x, y, red, green, blue */)
+                Renderer::new(shader_source::color_pipeline_source())
             }
         };
 
@@ -69,20 +67,16 @@ struct Renderer {
 }
 
 impl Renderer {
-    fn new(vertex_source: shader_source::ShaderSource,
-           fragment_source: shader_source::ShaderSource,
-           vertex_width: u8)
-           -> Renderer {
-
-
-        let vertex_shader = shader::Shader::new(vertex_source, shader::GLShaderEnum::VertexShader);
-        let fragment_shader = shader::Shader::new(fragment_source,
+    fn new(p_src: shader_source::RenderingPipelineSource) -> Renderer {
+        let vertex_shader = shader::Shader::new(p_src.vertex_glsl,
+                                                shader::GLShaderEnum::VertexShader);
+        let fragment_shader = shader::Shader::new(p_src.fragment_glsl,
                                                   shader::GLShaderEnum::FragmentShader);
         let program = shader::Program::new(vertex_shader, fragment_shader);
 
-        let vertex_data = vertex::VertexBuffers::new(vertex_width);
+        let vertex_data = vertex::VertexBuffers::new(p_src.vertex_width);
 
-        program.link_vertex(&vertex_data);
+        program.define_vertex_attribute_layout(&vertex_data, p_src.all_vertex_attrs);
 
         return Renderer {
             program: program,

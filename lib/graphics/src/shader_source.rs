@@ -2,21 +2,41 @@ extern crate gl;
 
 use gl::types::*;
 
-pub struct ShaderSource {
-    pub source_glsl: &'static str,
+pub struct RenderingPipelineSource {
+    pub vertex_glsl: &'static str,
+    pub fragment_glsl: &'static str,
+    pub all_vertex_attrs: Vec<VertexAttribute>,
+    pub vertex_width: u8,
+}
+
+pub struct VertexAttribute {
     pub var_name: &'static str,
     pub stride: GLsizei,
     pub offset: usize,
 }
 
-pub const COLOR_VERTEX_SOURCE: ShaderSource = ShaderSource {
-    source_glsl: VS_SRC,
+pub fn color_pipeline_source() -> RenderingPipelineSource {
+    return RenderingPipelineSource {
+        vertex_glsl: COLOR_VS_GLSL,
+        fragment_glsl: COLOR_FS_GLSL,
+        all_vertex_attrs: vec![POSITION_VERTEX_ATTR, COLOR_VERTEX_ATTR],
+        vertex_width: 5, // this is the width of a ColorVertex: x, y, red, green, blue
+    };
+}
+
+const POSITION_VERTEX_ATTR: VertexAttribute = VertexAttribute {
     var_name: "position",
     stride: 2,
     offset: 0,
 };
 
-const VS_SRC: &'static str = r#"#version 150
+const COLOR_VERTEX_ATTR: VertexAttribute = VertexAttribute {
+    var_name: "color",
+    stride: 3,
+    offset: 2,
+};
+
+const COLOR_VS_GLSL: &'static str = r#"#version 150
     in vec2 position;
     in vec3 color;
     out vec3 attr_color;
@@ -25,14 +45,7 @@ const VS_SRC: &'static str = r#"#version 150
        gl_Position = vec4(position, 0.0, 1.0);
     }"#;
 
-pub const COLOR_FRAGMENT_SOURCE: ShaderSource = ShaderSource {
-    source_glsl: FS_SRC,
-    var_name: "color",
-    stride: 3,
-    offset: 2,
-};
-
-const FS_SRC: &'static str = r#"#version 150
+const COLOR_FS_GLSL: &'static str = r#"#version 150
     in vec3 attr_color;
     out vec4 out_color;
     void main() {
