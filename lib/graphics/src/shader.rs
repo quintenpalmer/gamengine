@@ -91,8 +91,9 @@ pub struct Shader {
 }
 
 impl Shader {
-    pub fn new(src: &'static str, shader_ty: shader_source::GLShaderEnum) -> Shader {
-        let ty = shader_ty.to_glenum();
+    pub fn new<T: shader_source::GLShader>(gl_shader: T) -> Shader {
+        let ty = gl_shader.to_glenum();
+        let src = gl_shader.get_glsl();
         let shader;
         unsafe {
             shader = gl::CreateShader(ty);

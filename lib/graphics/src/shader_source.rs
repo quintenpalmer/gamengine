@@ -2,23 +2,42 @@ extern crate gl;
 
 use gl::types::*;
 
-pub enum GLShaderEnum {
-    VertexShader,
-    FragmentShader,
+pub trait GLShader {
+    fn to_glenum(&self) -> GLenum;
+    fn get_glsl(&self) -> &'static str;
 }
 
-impl GLShaderEnum {
-    pub fn to_glenum(&self) -> GLenum {
-        match self {
-            &GLShaderEnum::VertexShader => gl::VERTEX_SHADER,
-            &GLShaderEnum::FragmentShader => gl::FRAGMENT_SHADER,
-        }
+pub struct GLVertexShader {
+    glsl: &'static str,
+}
+
+impl GLShader for GLVertexShader {
+    fn to_glenum(&self) -> GLenum {
+        return gl::VERTEX_SHADER;
+    }
+
+    fn get_glsl(&self) -> &'static str {
+        return self.glsl;
+    }
+}
+
+pub struct GLFragmentShader {
+    glsl: &'static str,
+}
+
+impl GLShader for GLFragmentShader {
+    fn to_glenum(&self) -> GLenum {
+        return gl::FRAGMENT_SHADER;
+    }
+
+    fn get_glsl(&self) -> &'static str {
+        return self.glsl;
     }
 }
 
 pub struct RenderingPipelineSource {
-    pub vertex_glsl: &'static str,
-    pub fragment_glsl: &'static str,
+    pub vertex_glsl: GLVertexShader,
+    pub fragment_glsl: GLFragmentShader,
     pub all_vertex_attrs: Vec<VertexAttribute>,
     pub vertex_width: u8,
 }
@@ -31,8 +50,8 @@ pub struct VertexAttribute {
 
 pub fn color_pipeline_source() -> RenderingPipelineSource {
     return RenderingPipelineSource {
-        vertex_glsl: COLOR_VS_GLSL,
-        fragment_glsl: COLOR_FS_GLSL,
+        vertex_glsl: GLVertexShader { glsl: COLOR_VS_GLSL },
+        fragment_glsl: GLFragmentShader { glsl: COLOR_FS_GLSL },
         all_vertex_attrs: vec![POSITION_VERTEX_ATTR, COLOR_VERTEX_ATTR],
         vertex_width: 5, // this is the width of a ColorVertex: x, y, red, green, blue
     };

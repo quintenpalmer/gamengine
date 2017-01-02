@@ -68,10 +68,8 @@ struct Renderer {
 
 impl Renderer {
     fn new(p_src: shader_source::RenderingPipelineSource) -> Renderer {
-        let vertex_shader = shader::Shader::new(p_src.vertex_glsl,
-                                                shader_source::GLShaderEnum::VertexShader);
-        let fragment_shader = shader::Shader::new(p_src.fragment_glsl,
-                                                  shader_source::GLShaderEnum::FragmentShader);
+        let vertex_shader = shader::Shader::new(p_src.vertex_glsl);
+        let fragment_shader = shader::Shader::new(p_src.fragment_glsl);
         let program = shader::Program::new(vertex_shader, fragment_shader);
 
         let vertex_buffers = vertex::VertexBuffers::new(p_src.vertex_width);
