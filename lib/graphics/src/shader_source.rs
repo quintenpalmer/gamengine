@@ -2,6 +2,20 @@ extern crate gl;
 
 use gl::types::*;
 
+pub enum GLShaderEnum {
+    VertexShader,
+    FragmentShader,
+}
+
+impl GLShaderEnum {
+    pub fn to_glenum(&self) -> GLenum {
+        match self {
+            &GLShaderEnum::VertexShader => gl::VERTEX_SHADER,
+            &GLShaderEnum::FragmentShader => gl::FRAGMENT_SHADER,
+        }
+    }
+}
+
 pub struct RenderingPipelineSource {
     pub vertex_glsl: &'static str,
     pub fragment_glsl: &'static str,

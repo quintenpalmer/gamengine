@@ -86,26 +86,12 @@ impl Program {
     }
 }
 
-pub enum GLShaderEnum {
-    VertexShader,
-    FragmentShader,
-}
-
-impl GLShaderEnum {
-    fn to_glenum(&self) -> GLenum {
-        match self {
-            &GLShaderEnum::VertexShader => gl::VERTEX_SHADER,
-            &GLShaderEnum::FragmentShader => gl::FRAGMENT_SHADER,
-        }
-    }
-}
-
 pub struct Shader {
     addr: GLuint,
 }
 
 impl Shader {
-    pub fn new(src: &'static str, shader_ty: GLShaderEnum) -> Shader {
+    pub fn new(src: &'static str, shader_ty: shader_source::GLShaderEnum) -> Shader {
         let ty = shader_ty.to_glenum();
         let shader;
         unsafe {
