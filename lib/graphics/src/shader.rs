@@ -163,7 +163,7 @@ const VS_SRC: &'static str = r#"#version 150
        gl_Position = vec4(position, 0.0, 1.0);
     }"#;
 
-pub const SIMPLE_VERTEX_SOURCE: ShaderSource = ShaderSource {
+pub const COLOR_VERTEX_SOURCE: ShaderSource = ShaderSource {
     source_glsl: VS_SRC,
     var_name: "position",
     stride: 2,
@@ -177,7 +177,7 @@ const FS_SRC: &'static str = r#"#version 150
        out_color = vec4(attr_color, 1.0);
     }"#;
 
-pub const SIMPLE_FRAGMENT_SOURCE: ShaderSource = ShaderSource {
+pub const COLOR_FRAGMENT_SOURCE: ShaderSource = ShaderSource {
     source_glsl: FS_SRC,
     var_name: "color",
     stride: 3,

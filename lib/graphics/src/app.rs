@@ -26,8 +26,8 @@ impl App {
 
         let renderer = match source {
             RenderingSource::ColorRenderingSource => {
-                Renderer::new(shader::SIMPLE_VERTEX_SOURCE,
-                              shader::SIMPLE_FRAGMENT_SOURCE,
+                Renderer::new(shader::COLOR_VERTEX_SOURCE,
+                              shader::COLOR_FRAGMENT_SOURCE,
                               5 /* this is the width of a ColorVertex: x, y, red, green, blue */)
             }
         };
