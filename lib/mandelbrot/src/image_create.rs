@@ -13,7 +13,7 @@ pub fn gen_png(frame: Frame, iterations: u32) -> image::RgbaImage {
     for (raw_x, raw_y, pixel) in imagebuf.enumerate_pixels_mut() {
         let (x, y) = frame.get_coord_for_pixel(raw_x, raw_y);
         let divergence = eq::mandelbrot_divergence(x, y, iterations);
-        *pixel = gen_pixel(divergence, iterations);
+        *pixel = image::Rgba(gen_pixel(divergence, iterations));
     }
     return imagebuf;
 }
@@ -28,10 +28,10 @@ pub fn write_png(prefix: &str, frame: Frame, iterations: u32) -> Result<(), Box<
     return Ok(());
 }
 
-fn gen_pixel(m_divergence: Result<(), u32>, iterations: u32) -> image::Rgba<u8> {
+fn gen_pixel(m_divergence: Result<(), u32>, iterations: u32) -> [u8; 4] {
     match m_divergence {
         Ok(()) => {
-            image::Rgba([0, 0, 0, 255])
+            [0, 0, 0, 255]
         }
         Err(divergence) => {
             let div_u8 = (((divergence * 255) / iterations)) as u8;
