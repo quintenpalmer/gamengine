@@ -7,13 +7,17 @@ use std::path;
 use color_calc;
 use eq;
 
+pub fn get_pixel_values(frame: &Frame, raw_x: u32, raw_y: u32, iterations: u32) -> [u8; 4] {
+    let (x, y) = frame.get_coord_for_pixel(raw_x, raw_y);
+    let divergence = eq::mandelbrot_divergence(x, y, iterations);
+    return gen_pixel(divergence, iterations);
+}
+
 pub fn gen_png(frame: Frame, iterations: u32) -> image::RgbaImage {
     let mut imagebuf: image::RgbaImage = image::ImageBuffer::new(frame.screen_width,
                                                                  frame.screen_height);
     for (raw_x, raw_y, pixel) in imagebuf.enumerate_pixels_mut() {
-        let (x, y) = frame.get_coord_for_pixel(raw_x, raw_y);
-        let divergence = eq::mandelbrot_divergence(x, y, iterations);
-        *pixel = image::Rgba(gen_pixel(divergence, iterations));
+        *pixel = image::Rgba(get_pixel_values(&frame, raw_x, raw_y, iterations));
     }
     return imagebuf;
 }

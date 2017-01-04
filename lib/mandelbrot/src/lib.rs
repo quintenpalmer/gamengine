@@ -14,3 +14,4 @@ pub use fileformat::parse_frame;
 pub use image_create::gen_png;
 pub use image_create::write_png;
 pub use image_create::Frame;
+pub use image_create::get_pixel_values;
