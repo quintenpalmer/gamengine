@@ -90,6 +90,10 @@ impl Program {
         return vertex_attr.stride as usize;
     }
 
+    pub fn get_addr(&self) -> GLuint {
+        return self.addr;
+    }
+
     pub fn close(&self) {
         self.vertex_shader.close();
         self.fragment_shader.close();
