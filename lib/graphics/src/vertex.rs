@@ -10,195 +10,53 @@ pub struct VertexBuffers {
     vbo: GLuint,
     ebo: GLuint,
     pub vertex_width: u8,
-    pub rects: Vec<Box<VertexSpecable>>,
 }
 
 pub trait VertexSpecable {
     fn get_vertex_specification(&self) -> VertexSpecification;
-    fn update_offset(&mut self, x: f32, y: f32);
 }
 
 pub struct VertexSpecification {
-    vertices: Vec<GLfloat>,
-    elements: Vec<GLint>,
+    pub vertices: Vec<Vertex>,
+    pub elements: Vec<ElementTriangle>,
 }
 
-struct Color {
-    red: u8,
-    green: u8,
-    blue: u8,
+pub struct Vertex {
+    pub x: GLfloat,
+    pub y: GLfloat,
+    pub red: GLfloat,
+    pub green: GLfloat,
+    pub blue: GLfloat,
 }
 
-impl Color {
-    fn get_color_floats(&self) -> (f32, f32, f32) {
-        let red = f32::from(self.red) / 255.0;
-        let green = f32::from(self.green) / 255.0;
-        let blue = f32::from(self.blue) / 255.0;
-        return (red, green, blue);
+impl Vertex {
+    fn get_vec(&self) -> Vec<GLfloat> {
+        return vec![self.x, self.y, self.red, self.green, self.blue];
     }
 }
 
-struct LocInfo {
-    x: f32,
-    y: f32,
-    orig_x: f32,
-    orig_y: f32,
+pub struct ElementTriangle {
+    pub p1: GLint,
+    pub p2: GLint,
+    pub p3: GLint,
 }
 
-impl LocInfo {
-    fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
-        self.x = self.orig_x + x_offset;
-        self.y = self.orig_y + y_offset;
-    }
-}
-
-pub struct Rect {
-    loc: LocInfo,
-    width: f32,
-    height: f32,
-    color: Color,
-}
-
-impl Rect {
-    pub fn new(xloc: f32,
-               yloc: f32,
-               width: f32,
-               height: f32,
-               red: u8,
-               green: u8,
-               blue: u8)
-               -> Rect {
-        return Rect {
-            loc: LocInfo {
-                x: xloc,
-                y: yloc,
-                orig_x: xloc,
-                orig_y: yloc,
-            },
-            width: width,
-            height: height,
-            color: Color {
-                red: red,
-                green: green,
-                blue: blue,
-            },
-        };
+impl ElementTriangle {
+    fn get_vec(&self) -> Vec<GLint> {
+        return vec![self.p1, self.p2, self.p3];
     }
 
-    fn calc_corners(&self) -> (f32, f32, f32, f32) {
-        let top = self.loc.y + (self.height / 2.0);
-        let bottom = self.loc.y - (self.height / 2.0);
-        let right = self.loc.x + (self.width / 2.0);
-        let left = self.loc.x - (self.width / 2.0);
-        return (top, bottom, left, right);
-    }
-}
-
-impl VertexSpecable for Rect {
-    fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
-        self.loc.update_offset(x_offset, y_offset)
-    }
-
-    fn get_vertex_specification(&self) -> VertexSpecification {
-        let (top, bottom, left, right) = self.calc_corners();
-        let (red, green, blue) = self.color.get_color_floats();
-        // top-left, top-right, bottom-left, bottom-right
-        let vertices = vec![left, top, red, green, blue, right, top, red, green, blue, right,
-                            bottom, red, green, blue, left, bottom, red, green, blue];
-
-        // the elements each point to what 3 points make up a single triangle
-        // given the elements below and the vertex data, we see the triangles
-        // are as follows:
-        //
-        // triangle one | triangle two
-        //  o--o        |    o
-        //  | /         |   /|
-        //  |/          |  / |
-        //  o           | o--o
-        let elements: Vec<GLint> = vec![0, 1, 2, 2, 3, 0];
-
-        return VertexSpecification {
-            vertices: vertices,
-            elements: elements,
-        };
-    }
-}
-
-pub struct Triangle {
-    loc: LocInfo,
-    width: f32,
-    height: f32,
-    color: Color,
-}
-
-impl Triangle {
-    pub fn new(xloc: f32,
-               yloc: f32,
-               width: f32,
-               height: f32,
-               red: u8,
-               green: u8,
-               blue: u8)
-               -> Triangle {
-        return Triangle {
-            loc: LocInfo {
-                x: xloc,
-                y: yloc,
-                orig_x: xloc,
-                orig_y: yloc,
-            },
-            width: width,
-            height: height,
-            color: Color {
-                red: red,
-                green: green,
-                blue: blue,
-            },
-        };
-    }
-
-    fn calc_points(&self) -> (f32, f32, f32, f32, f32) {
-        let top = self.loc.y + (self.height / 2.0);
-        let bottom = self.loc.y - (self.height / 2.0);
-        let right = self.loc.x + (self.width / 2.0);
-        let left = self.loc.x - (self.width / 2.0);
-        let middle = self.loc.x;
-        return (top, bottom, left, right, middle);
-    }
-}
-
-impl VertexSpecable for Triangle {
-    fn update_offset(&mut self, x_offset: f32, y_offset: f32) {
-        self.loc.update_offset(x_offset, y_offset)
-    }
-
-    fn get_vertex_specification(&self) -> VertexSpecification {
-        let (top, bottom, left, right, middle) = self.calc_points();
-        let (red, green, blue) = self.color.get_color_floats();
-        // top-middle, bottom-right, bottom-left
-        let vertices = vec![middle, top, red, green, blue, right, bottom, red, green, blue, left,
-                            bottom, red, green, blue];
-
-        // the elements each point to what 3 points make up a single triangle
-        // given the elements below and the vertex data, we see the triangle
-        // is as follows:
-        //
-        // triangle
-        //  o--o
-        //  | /
-        //  |/
-        //  o
-        let elements: Vec<GLint> = vec![0, 1, 2];
-
-        return VertexSpecification {
-            vertices: vertices,
-            elements: elements,
+    fn add_vertex_offset(&self, vertex_offset: i32) -> ElementTriangle {
+        return ElementTriangle {
+            p1: self.p1 + vertex_offset,
+            p2: self.p2 + vertex_offset,
+            p3: self.p3 + vertex_offset,
         };
     }
 }
 
 impl VertexBuffers {
-    pub fn new(rects: Vec<Box<VertexSpecable>>) -> VertexBuffers {
+    pub fn new<V: VertexSpecable + ?Sized>(rects: &Vec<Box<V>>) -> VertexBuffers {
         let mut vao = 0;
         let mut vbo = 0;
         let mut ebo = 0;
@@ -219,39 +77,26 @@ impl VertexBuffers {
             vao: vao,
             vbo: vbo,
             ebo: ebo,
-            rects: rects,
-            vertex_width: 5,
+            vertex_width: 5, /* this is the width of the current definition of a Vertex, the struct above */
         };
 
-        v.gen_vertex_buffers();
+        v.gen_vertex_buffers(rects);
         return v;
     }
 
-    fn full_vertex_spec(&self) -> VertexSpecification {
-        let mut vertices = vec::Vec::new();
-        let mut elements = vec::Vec::new();
-        let mut vertex_count_offset = 0;
-        for rect in self.rects.iter() {
-            let mut vert_spec = rect.get_vertex_specification();
+    pub fn gen_vertex_buffers<V: VertexSpecable + ?Sized>(&self, rects: &Vec<Box<V>>) -> GLsizei {
+        let vertex_spec = full_vertex_spec(rects);
+        let vertex_structs = vertex_spec.vertices;
+        let element_triangles = vertex_spec.elements;
 
-            let vertex_count = (vert_spec.vertices.len() / (self.vertex_width as usize)) as i32;
-
-            vertices.append(&mut vert_spec.vertices);
-            elements.append(&mut vert_spec.elements.iter().map(|&x| x + vertex_count_offset).collect());
-
-            vertex_count_offset += vertex_count;
+        let mut vertices: vec::Vec<GLfloat> = vec::Vec::new();
+        for vertex in vertex_structs.iter() {
+            vertices.append(&mut vertex.get_vec());
         }
-
-        return VertexSpecification {
-            vertices: vertices,
-            elements: elements,
-        };
-    }
-
-    pub fn gen_vertex_buffers(&self) -> GLsizei {
-        let vertex_spec = self.full_vertex_spec();
-        let vertices = vertex_spec.vertices;
-        let elements = vertex_spec.elements;
+        let mut elements: vec::Vec<GLint> = vec::Vec::new();
+        for element_triangle in element_triangles.iter() {
+            elements.append(&mut element_triangle.get_vec());
+        }
 
         let elem_count = elements.len() as GLsizei;
 
@@ -283,4 +128,28 @@ impl VertexBuffers {
             gl::DeleteBuffers(1, &self.ebo);
         }
     }
+}
+
+fn full_vertex_spec<V: VertexSpecable + ?Sized>(rects: &Vec<Box<V>>) -> VertexSpecification {
+    let mut vertices = vec::Vec::new();
+    let mut elements = vec::Vec::new();
+    let mut vertex_count_offset = 0;
+    for rect in rects.iter() {
+        let mut vert_spec = rect.get_vertex_specification();
+
+        let vertex_count = vert_spec.vertices.len() as i32;
+
+        vertices.append(&mut vert_spec.vertices);
+        elements.append(&mut vert_spec.elements
+            .iter()
+            .map(|x| x.add_vertex_offset(vertex_count_offset))
+            .collect());
+
+        vertex_count_offset += vertex_count;
+    }
+
+    return VertexSpecification {
+        vertices: vertices,
+        elements: elements,
+    };
 }

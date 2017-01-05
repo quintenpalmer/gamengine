@@ -23,6 +23,9 @@ impl std::error::Error for ArgError {
     }
 }
 
+trait UpdateSpecable: graphics::VertexSpecable + graphics::Updateable {}
+impl<T> UpdateSpecable for T where T: graphics::VertexSpecable + graphics::Updateable {}
+
 fn main() {
     println!("hello from a client");
     match run_app() {
@@ -43,44 +46,44 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
     let shape_sources = try!(fileformat::parse_shape_source(filename));
 
 
-    let mut rects: Vec<Box<graphics::VertexSpecable>> = std::vec::Vec::new();
+    let mut rects: Vec<Box<UpdateSpecable>> = std::vec::Vec::new();
     for shape_source in shape_sources.iter() {
         match shape_source.shape {
             fileformat::ShapeType::Rect => {
-                rects.push(Box::new(graphics::Rect::new(shape_source.x,
-                                                        shape_source.y,
-                                                        shape_source.width,
-                                                        shape_source.height,
-                                                        shape_source.red,
-                                                        shape_source.green,
-                                                        shape_source.blue)))
+                rects.push(Box::new(graphics::SimpleRect::new(shape_source.x,
+                                                              shape_source.y,
+                                                              shape_source.width,
+                                                              shape_source.height,
+                                                              shape_source.red,
+                                                              shape_source.green,
+                                                              shape_source.blue)))
             }
             fileformat::ShapeType::Triangle => {
-                rects.push(Box::new(graphics::Triangle::new(shape_source.x,
-                                                            shape_source.y,
-                                                            shape_source.width,
-                                                            shape_source.height,
-                                                            shape_source.red,
-                                                            shape_source.green,
-                                                            shape_source.blue)))
+                rects.push(Box::new(graphics::SimpleTriangle::new(shape_source.x,
+                                                                  shape_source.y,
+                                                                  shape_source.width,
+                                                                  shape_source.height,
+                                                                  shape_source.red,
+                                                                  shape_source.green,
+                                                                  shape_source.blue)))
             }
         }
     }
-    let mut app = try!(graphics::App::new(600,
-                                          600,
-                                          "Parallax Client Demo",
-                                          graphics::SIMPLE_VERTEX_SOURCE,
-                                          graphics::SIMPLE_FRAGMENT_SOURCE,
-                                          rects));
+    let app = try!(graphics::App::new(600,
+                                      600,
+                                      "Parallax Client Demo",
+                                      graphics::SIMPLE_VERTEX_SOURCE,
+                                      graphics::SIMPLE_FRAGMENT_SOURCE,
+                                      &rects));
     let mut iteration = 0;
     loop {
-        for x in 0..shape_sources.len() {
-            let ref s = shape_sources[x];
+        for i in 0..shape_sources.len() {
+            let ref s = shape_sources[i];
 
             let new_x = s.x_scale * operate(s.x_func, iteration + s.x_offset, s.x_cycle_size);
             let new_y = s.y_scale * operate(s.y_func, iteration + s.y_offset, s.y_cycle_size);
 
-            try!(app.update_rect(x, new_x, new_y));
+            rects[i].update_offset(new_x, new_y);
         }
 
         if app.window.handle_events() {
@@ -88,7 +91,7 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
         }
         iteration += 1;
 
-        try!(app.draw());
+        try!(app.draw(&rects));
     }
     app.close();
     return Ok(());

@@ -2,7 +2,6 @@ extern crate glutin;
 extern crate gl;
 
 use std::ptr;
-use std::fmt;
 use std::error;
 
 use window;
@@ -16,13 +15,14 @@ pub struct App {
 }
 
 impl App {
-    pub fn new<T: Into<String>>(width: u32,
-                                height: u32,
-                                title: T,
-                                vertex_source: shader::ShaderSource,
-                                fragment_source: shader::ShaderSource,
-                                rects: Vec<Box<vertex::VertexSpecable>>)
-                                -> Result<App, Box<error::Error>> {
+    pub fn new<T: Into<String>, V: vertex::VertexSpecable + ?Sized>
+        (width: u32,
+         height: u32,
+         title: T,
+         vertex_source: shader::ShaderSource,
+         fragment_source: shader::ShaderSource,
+         rects: &Vec<Box<V>>)
+         -> Result<App, Box<error::Error>> {
 
         let window = try!(window::Window::new(width, height, title));
 
@@ -44,9 +44,11 @@ impl App {
         });
     }
 
-    pub fn draw(&self) -> Result<(), glutin::ContextError> {
+    pub fn draw<V: vertex::VertexSpecable + ?Sized>(&self,
+                                                    rects: &Vec<Box<V>>)
+                                                    -> Result<(), glutin::ContextError> {
         // build and copy the vertex data
-        let element_count = self.vertices.gen_vertex_buffers();
+        let element_count = self.vertices.gen_vertex_buffers(rects);
         unsafe {
             // Clear the screen to red
             gl::ClearColor(0.9, 0.1, 0.2, 1.0);
@@ -60,43 +62,8 @@ impl App {
         return Ok(());
     }
 
-    pub fn update_rect(&mut self,
-                       index: usize,
-                       x_offset: f32,
-                       y_offset: f32)
-                       -> Result<(), Box<error::Error>> {
-        let o_rect = self.vertices.rects.get_mut(index);
-        match o_rect {
-            Some(rect) => {
-                rect.update_offset(x_offset, y_offset);
-                return Ok(());
-            }
-            None => return Err(Box::new(OutOfBoundsError {})),
-        }
-    }
-
     pub fn close(&self) {
         self.vertices.close();
         self.program.close();
-    }
-}
-
-#[derive(Debug)]
-struct OutOfBoundsError {
-}
-
-impl fmt::Display for OutOfBoundsError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "out of bounds error")
-    }
-}
-
-impl error::Error for OutOfBoundsError {
-    fn description(&self) -> &str {
-        return "request to index outside bounds of vector";
-    }
-
-    fn cause(&self) -> Option<&error::Error> {
-        return None;
     }
 }
