@@ -28,10 +28,11 @@ impl error::Error for MultiFrameError {
 pub struct Frame {
     pub screen_width: u32,
     pub screen_height: u32,
-    pub x_min: f32,
-    pub x_max: f32,
-    pub y_min: f32,
-    pub y_max: f32,
+    pub x_min: f64,
+    pub x_max: f64,
+    pub y_min: f64,
+    pub y_max: f64,
+    pub iterations: u32,
 }
 
 pub fn parse_frame(filename: &str) -> Result<Frame, Box<error::Error>> {
