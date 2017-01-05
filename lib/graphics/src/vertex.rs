@@ -39,6 +39,19 @@ impl Vertex for ColorVertex {
     }
 }
 
+pub struct TextureVertex {
+    pub x: GLfloat,
+    pub y: GLfloat,
+    pub tex_x: GLfloat,
+    pub tex_y: GLfloat,
+}
+
+impl Vertex for TextureVertex {
+    fn get_vec(&self) -> Vec<GLfloat> {
+        return vec![self.x, self.y, self.tex_x, self.tex_y];
+    }
+}
+
 pub struct ElementTriangle {
     pub p1: GLint,
     pub p2: GLint,

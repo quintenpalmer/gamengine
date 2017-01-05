@@ -79,3 +79,37 @@ const COLOR_FS_GLSL: &'static str = r#"#version 150
     void main() {
        out_color = vec4(attr_color, 1.0);
     }"#;
+
+// Texture Pipeline Source Definition
+pub fn texture_pipeline_source() -> RenderingPipelineSource {
+    return RenderingPipelineSource {
+        vertex_glsl: GLVertexShader { glsl: TEX_VS_GLSL },
+        fragment_glsl: GLFragmentShader { glsl: TEX_FS_GLSL },
+        all_vertex_attrs: vec![VertexAttribute {
+                                   var_name: "position",
+                                   stride: 2,
+                               },
+                               VertexAttribute {
+                                   var_name: "texcoord",
+                                   stride: 2,
+                               }],
+        vertex_width: 4, // this is the width of a TexVertex: x, y, tex_x, tex_y
+    };
+}
+
+const TEX_VS_GLSL: &'static str = r#"#version 150
+    in vec2 position;
+    in vec2 texcoord;
+    out vec2 attr_texcoord;
+    void main() {
+       attr_texcoord = texcoord;
+       gl_Position = vec4(position, 0.0, 1.0);
+    }"#;
+
+const TEX_FS_GLSL: &'static str = r#"#version 150
+    in vec2 attr_texcoord;
+    uniform sampler2D tex_sample;
+    out vec4 out_color;
+    void main() {
+       out_color = texture(tex_sample, attr_texcoord);
+    }"#;

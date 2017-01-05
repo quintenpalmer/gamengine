@@ -6,6 +6,7 @@ use std::ptr;
 
 use program;
 use shader_source;
+use texture;
 use vertex;
 use window;
 
@@ -28,6 +29,11 @@ impl App {
         let renderer = match source {
             RenderingSource::ColorRenderingSource => {
                 Renderer::new(shader_source::color_pipeline_source())
+            }
+            RenderingSource::TextureRenderingSource { tex_def } => {
+                let r = Renderer::new(shader_source::texture_pipeline_source());
+                texture::texture_load(r.program.get_addr(), tex_def);
+                r
             }
         };
 
@@ -63,6 +69,7 @@ impl App {
 
 pub enum RenderingSource {
     ColorRenderingSource,
+    TextureRenderingSource { tex_def: texture::TextureSetupDefinition, },
 }
 
 struct Renderer {
