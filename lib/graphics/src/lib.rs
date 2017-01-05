@@ -17,4 +17,5 @@ pub use shapes::Updateable;
 pub use vertex::VertexSpecable;
 pub use vertex::VertexSpecification;
 pub use vertex::Vertex;
+pub use vertex::ColorVertex;
 pub use vertex::ElementTriangle;

@@ -47,6 +47,7 @@ pub struct VertexAttribute {
     pub stride: GLsizei,
 }
 
+// Color Pipeline Source Definition
 pub fn color_pipeline_source() -> RenderingPipelineSource {
     return RenderingPipelineSource {
         vertex_glsl: GLVertexShader { glsl: COLOR_VS_GLSL },
