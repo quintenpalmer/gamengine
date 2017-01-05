@@ -46,7 +46,10 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
         rects.push(graphics::Rect::new(rect_source.x,
                                        rect_source.y,
                                        rect_source.width,
-                                       rect_source.height));
+                                       rect_source.height,
+                                       rect_source.red,
+                                       rect_source.green,
+                                       rect_source.blue));
     }
     let mut app = try!(graphics::App::new(600,
                                           600,

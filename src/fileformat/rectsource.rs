@@ -17,6 +17,9 @@ pub struct RectSource {
     pub y_cycle_size: u16,
     pub x_offset: u16,
     pub y_offset: u16,
+    pub red: u8,
+    pub green: u8,
+    pub blue: u8,
 }
 
 pub fn parse_rect_source(filename: &str) -> Result<Vec<RectSource>, csv::Error> {
