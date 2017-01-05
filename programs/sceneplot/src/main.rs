@@ -69,12 +69,11 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
             }
         }
     }
+
     let app = try!(graphics::App::new(600,
                                       600,
                                       "Parallax Client Demo",
-                                      graphics::SIMPLE_VERTEX_SOURCE,
-                                      graphics::SIMPLE_FRAGMENT_SOURCE,
-                                      &rects));
+                                      graphics::RenderingSource::ColorRenderingSource));
     let mut iteration = 0;
     loop {
         for i in 0..shape_sources.len() {

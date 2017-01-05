@@ -9,7 +9,7 @@ pub struct VertexBuffers {
     vao: GLuint,
     vbo: GLuint,
     ebo: GLuint,
-    pub vertex_width: u8,
+    pub vertex_width: u8, // this is the width of the concrete struct that satisfies the Vertex trait
 }
 
 pub trait VertexSpecable {
@@ -17,11 +17,15 @@ pub trait VertexSpecable {
 }
 
 pub struct VertexSpecification {
-    pub vertices: Vec<Vertex>,
+    pub vertices: Vec<Box<Vertex>>,
     pub elements: Vec<ElementTriangle>,
 }
 
-pub struct Vertex {
+pub trait Vertex {
+    fn get_vec(&self) -> Vec<GLfloat>;
+}
+
+pub struct ColorVertex {
     pub x: GLfloat,
     pub y: GLfloat,
     pub red: GLfloat,
@@ -29,7 +33,7 @@ pub struct Vertex {
     pub blue: GLfloat,
 }
 
-impl Vertex {
+impl Vertex for ColorVertex {
     fn get_vec(&self) -> Vec<GLfloat> {
         return vec![self.x, self.y, self.red, self.green, self.blue];
     }
@@ -56,7 +60,7 @@ impl ElementTriangle {
 }
 
 impl VertexBuffers {
-    pub fn new<V: VertexSpecable + ?Sized>(rects: &Vec<Box<V>>) -> VertexBuffers {
+    pub fn new(vertex_width: u8) -> VertexBuffers {
         let mut vao = 0;
         let mut vbo = 0;
         let mut ebo = 0;
@@ -77,10 +81,12 @@ impl VertexBuffers {
             vao: vao,
             vbo: vbo,
             ebo: ebo,
-            vertex_width: 5, /* this is the width of the current definition of a Vertex, the struct above */
+            vertex_width: vertex_width,
         };
-
-        v.gen_vertex_buffers(rects);
+        unsafe {
+            gl::BindBuffer(gl::ARRAY_BUFFER, v.vbo);
+            gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, v.ebo);
+        }
         return v;
     }
 
@@ -102,13 +108,11 @@ impl VertexBuffers {
 
         unsafe {
             // copy the vertex data to the Vertex Buffer Object
-            gl::BindBuffer(gl::ARRAY_BUFFER, self.vbo);
             gl::BufferData(gl::ARRAY_BUFFER,
                            (vertices.len() * mem::size_of::<GLfloat>()) as GLsizeiptr,
                            mem::transmute(&vertices[0]),
                            gl::STATIC_DRAW);
 
-            gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, self.ebo);
             gl::BufferData(gl::ELEMENT_ARRAY_BUFFER,
                            (elements.len() * mem::size_of::<GLint>()) as GLsizeiptr,
                            mem::transmute(&elements[0]),
