@@ -2,15 +2,14 @@ extern crate graphics;
 
 fn main() {
     println!("hello from a client");
+    let rects = vec![graphics::Rect::new(0.2, 0.6, 0.0, 0.0),
+                     graphics::Rect::new(0.6, 0.2, 0.0, 0.0)];
     let r_app = graphics::App::new(600,
                                    600,
                                    "Parallax Client Demo",
                                    graphics::SIMPLE_VERTEX_SOURCE,
                                    graphics::SIMPLE_FRAGMENT_SOURCE,
-                                   0.0,
-                                   0.0,
-                                   0.25,
-                                   0.25);
+                                   rects);
     match r_app {
         Ok(mut app) => {
             loop {

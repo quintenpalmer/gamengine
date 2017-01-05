@@ -2,21 +2,72 @@ extern crate gl;
 
 use gl::types::*;
 
+use std::vec;
 use std::mem;
 
-pub struct VertexData {
+pub struct VertexBuffers {
     vao: GLuint,
     vbo: GLuint,
     ebo: GLuint,
+    pub vertex_width: u8,
+    pub rects: Vec<Rect>,
+}
+
+pub struct Rect {
     pub x: f32,
     pub y: f32,
     width: f32,
     height: f32,
-    pub vertex_width: u8,
 }
 
-impl VertexData {
-    pub fn new(width: f32, height: f32, xloc: f32, yloc: f32) -> VertexData {
+struct VertexSpecification {
+    vertices: Vec<GLfloat>,
+    elements: Vec<GLint>,
+}
+
+impl Rect {
+    pub fn new(width: f32, height: f32, xloc: f32, yloc: f32) -> Rect {
+        return Rect {
+            x: xloc,
+            y: yloc,
+            width: width,
+            height: height,
+        };
+    }
+
+    fn calc_corners(&self) -> (f32, f32, f32, f32) {
+        let top = self.y + (self.height / 2.0);
+        let bottom = self.y - (self.height / 2.0);
+        let right = self.x + (self.width / 2.0);
+        let left = self.x - (self.width / 2.0);
+        return (top, bottom, left, right);
+    }
+
+    fn get_vertex_specification(&self) -> VertexSpecification {
+        let (top, bottom, left, right) = self.calc_corners();
+        // top-left, top-right, bottom-left, bottom-right
+        let vertices = vec![left, top, right, top, right, bottom, left, bottom];
+
+        // the elements each point to what 3 points make up a single triangle
+        // given the elements below and the vertex data, we see the triangles
+        // are as follows:
+        //
+        // triangle one | triangle two
+        //  o--o        |    o
+        //  | /         |   /|
+        //  |/          |  / |
+        //  o           | o--o
+        let elements: Vec<GLint> = vec![0, 1, 2, 2, 3, 0];
+
+        return VertexSpecification {
+            vertices: vertices,
+            elements: elements,
+        };
+    }
+}
+
+impl VertexBuffers {
+    pub fn new(rects: Vec<Rect>) -> VertexBuffers {
         let mut vao = 0;
         let mut vbo = 0;
         let mut ebo = 0;
@@ -33,14 +84,11 @@ impl VertexData {
             gl::GenBuffers(1, &mut ebo);
         }
 
-        let mut v = VertexData {
+        let mut v = VertexBuffers {
             vao: vao,
             vbo: vbo,
             ebo: ebo,
-            x: xloc,
-            y: yloc,
-            width: width,
-            height: height,
+            rects: rects,
             vertex_width: 2,
         };
 
@@ -48,14 +96,21 @@ impl VertexData {
         return v;
     }
 
-    pub fn gen_vertex_buffers(&mut self) {
-        let (top, bottom, left, right) = calc_corners(self.x, self.y, self.width, self.height);
-        let vertices: Vec<GLfloat> = vertex_vector(top, bottom, left, right);
+    pub fn gen_vertex_buffers(&mut self) -> GLsizei {
+        let mut vertices = vec::Vec::new();
+        let mut elements = vec::Vec::new();
+        let mut vertex_count_offset = 0;
+        for rect in self.rects.iter() {
+            let mut vert_spec = rect.get_vertex_specification();
 
-        let elements: Vec<GLint> = vec!(
-            0, 1, 2,
-            2, 3, 0,
-        );
+            let vertex_count = (vert_spec.vertices.len() / 2) as i32;
+
+            vertices.append(&mut vert_spec.vertices);
+            elements.append(&mut vert_spec.elements.iter().map(|&x| x + vertex_count_offset).collect());
+
+            vertex_count_offset += vertex_count;
+        }
+        let elem_count = elements.len() as GLsizei;
 
         unsafe {
             // copy the vertex data to the Vertex Buffer Object
@@ -71,6 +126,8 @@ impl VertexData {
                            mem::transmute(&elements[0]),
                            gl::STATIC_DRAW);
         }
+
+        return elem_count;
     }
 
     pub fn close(&self) {
@@ -83,21 +140,4 @@ impl VertexData {
             gl::DeleteBuffers(1, &self.ebo);
         }
     }
-}
-
-fn calc_corners(width: f32, height: f32, x: f32, y: f32) -> (f32, f32, f32, f32) {
-    let top = y + (height / 2.0);
-    let bottom = y - (height / 2.0);
-    let right = x + (width / 2.0);
-    let left = x - (width / 2.0);
-    return (top, bottom, left, right);
-}
-
-fn vertex_vector(top: f32, bottom: f32, left: f32, right: f32) -> Vec<GLfloat> {
-    return vec!(
-         left,    top, // top left
-        right,    top, // top right
-        right, bottom, // bottom right
-         left, bottom  // bottom left
-    );
 }
