@@ -33,7 +33,7 @@ impl VertexData {
             gl::GenBuffers(1, &mut ebo);
         }
 
-        let mut v = VertexData{
+        let mut v = VertexData {
             vao: vao,
             vbo: vbo,
             ebo: ebo,
