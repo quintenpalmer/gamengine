@@ -17,9 +17,15 @@ pub struct Program {
 }
 
 impl Program {
-    pub fn new(vs: Shader, fs: Shader) -> Program {
+    pub fn new(vertex_glsl: shader_source::GLVertexShader,
+               fragment_glsl: shader_source::GLFragmentShader,
+               all_vertex_attrs: Vec<shader_source::VertexAttribute>,
+               vbs: &vertex::VertexBuffers)
+               -> Program {
         unsafe {
             let program = gl::CreateProgram();
+            let vs = Shader::new(vertex_glsl);
+            let fs = Shader::new(fragment_glsl);
             gl::AttachShader(program, vs.addr);
             gl::AttachShader(program, fs.addr);
             gl::LinkProgram(program);
@@ -41,30 +47,35 @@ impl Program {
                 panic!("{}",
                        str::from_utf8(&buf).ok().expect("ProgramInfoLog not valid utf8"));
             }
-            return Program {
+            let p = Program {
                 addr: program,
                 vertex_shader: vs,
                 fragment_shader: fs,
             };
+            p.define_vertex_attribute_layout(vbs, all_vertex_attrs);
+            return p;
         }
     }
 
-    pub fn define_vertex_attribute_layout(&self,
-                                          vbs: &vertex::VertexBuffers,
-                                          vertex_attrs: Vec<shader_source::VertexAttribute>) {
+    fn define_vertex_attribute_layout(&self,
+                                      vbs: &vertex::VertexBuffers,
+                                      vertex_attrs: Vec<shader_source::VertexAttribute>) {
         unsafe {
             gl::UseProgram(self.addr);
             gl::BindFragDataLocation(self.addr, 0, CString::new("out_color").unwrap().as_ptr());
         }
+        let mut total_offset = 0;
         for vertex_attr in vertex_attrs.iter() {
-
-            self.define_single_vertex_attribute(vbs, vertex_attr);
+            let offset = self.define_single_vertex_attribute(vbs, vertex_attr, total_offset);
+            total_offset += offset;
         }
     }
 
-    pub fn define_single_vertex_attribute(&self,
-                                          vbs: &vertex::VertexBuffers,
-                                          vertex_attr: &shader_source::VertexAttribute) {
+    fn define_single_vertex_attribute(&self,
+                                      vbs: &vertex::VertexBuffers,
+                                      vertex_attr: &shader_source::VertexAttribute,
+                                      offset: usize)
+                                      -> usize {
         unsafe {
             // Specify the layout of the vertex data
             let attr = gl::GetAttribLocation(self.addr,
@@ -73,8 +84,9 @@ impl Program {
             gl::VertexAttribPointer(attr as GLuint, vertex_attr.stride, gl::FLOAT,
                                     gl::FALSE as GLboolean,
                                     ((vbs.vertex_width as GLsizei) * (mem::size_of::<GLfloat>() as GLsizei)) as i32,
-                                    (vertex_attr.offset * mem::size_of::<GLfloat>()) as *const _);
+                                    (offset * mem::size_of::<GLfloat>()) as *const _);
         }
+        return vertex_attr.stride as usize;
     }
 
     pub fn close(&self) {
@@ -86,27 +98,14 @@ impl Program {
     }
 }
 
-pub enum GLShaderEnum {
-    VertexShader,
-    FragmentShader,
-}
-
-impl GLShaderEnum {
-    fn to_glenum(&self) -> GLenum {
-        match self {
-            &GLShaderEnum::VertexShader => gl::VERTEX_SHADER,
-            &GLShaderEnum::FragmentShader => gl::FRAGMENT_SHADER,
-        }
-    }
-}
-
 pub struct Shader {
     addr: GLuint,
 }
 
 impl Shader {
-    pub fn new(src: &'static str, shader_ty: GLShaderEnum) -> Shader {
-        let ty = shader_ty.to_glenum();
+    pub fn new<T: shader_source::GLShader>(gl_shader: T) -> Shader {
+        let ty = gl_shader.to_glenum();
+        let src = gl_shader.get_glsl();
         let shader;
         unsafe {
             shader = gl::CreateShader(ty);
