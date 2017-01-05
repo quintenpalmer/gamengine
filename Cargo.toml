@@ -8,3 +8,6 @@ name = "parallaxclient"
 path = "src/parallaxclient/main.rs"
 test = false
 bench = false
+
+[dependencies]
+graphics = {path = "src/graphics"}
