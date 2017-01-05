@@ -1,11 +1,8 @@
 [package]
-name = "types"
+name = "graphics"
 version = "0.0.1"
 authors = ["Quinten Palmer <quintenpalmer@gmail.com>"]
 
-[lib]
-name = "types"
-path = "lib.rs"
-
 [dependencies]
-rustc-serialize = "0.3"
+glutin = "0.6.1"
+gl = "0.6.1"

@@ -1,6 +1,8 @@
 extern crate graphics;
-extern crate fileformat;
-extern crate types;
+extern crate plotlib;
+
+use plotlib::fileformat;
+use plotlib::types;
 
 #[derive(Debug)]
 struct ArgError {}

@@ -3,6 +3,8 @@ extern crate rustc_serialize;
 use rustc_serialize::Decodable;
 use rustc_serialize::Decoder;
 
+use std;
+
 #[derive(Clone, Copy)]
 pub enum MathFunc {
     Linear,

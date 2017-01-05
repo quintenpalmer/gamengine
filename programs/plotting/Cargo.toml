@@ -1,0 +1,8 @@
+[package]
+name = "plottin"
+version = "0.1.0"
+authors = ["Quinten Palmer <quintenpalmer@gmail.com>"]
+
+[dependencies]
+graphics = {path = "../../lib/graphics"}
+plotlib = {path = "../../lib/plotlib"}
