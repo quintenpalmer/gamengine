@@ -1,4 +1,3 @@
-extern crate image;
 extern crate num;
 
 use num::rational::Ratio;
@@ -9,7 +8,7 @@ pub struct SimpleColor {
     blue: u8,
 }
 
-pub fn yellow_to_blue(value: u8) -> image::Rgba<u8> {
+pub fn yellow_to_blue(value: u8) -> [u8; 4] {
     return pixel_color(SimpleColor {
                            red: 255,
                            green: 255,
@@ -23,11 +22,11 @@ pub fn yellow_to_blue(value: u8) -> image::Rgba<u8> {
                        value);
 }
 
-pub fn pixel_color(start: SimpleColor, end: SimpleColor, value: u8) -> image::Rgba<u8> {
-    return image::Rgba([lin_interp(start.red, end.red, value),
-                        lin_interp(start.green, end.green, value),
-                        lin_interp(start.blue, end.blue, value),
-                        255]);
+pub fn pixel_color(start: SimpleColor, end: SimpleColor, value: u8) -> [u8; 4] {
+    return [lin_interp(start.red, end.red, value),
+            lin_interp(start.green, end.green, value),
+            lin_interp(start.blue, end.blue, value),
+            255];
 }
 
 pub fn lin_interp(start: u8, end: u8, val: u8) -> u8 {
