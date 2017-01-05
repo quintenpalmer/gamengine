@@ -51,8 +51,10 @@ impl Program {
     pub fn link_vertex(&self, vd: &vertex::VertexBuffers) {
         unsafe {
             gl::UseProgram(self.addr);
+            gl::BindFragDataLocation(self.addr, 0, CString::new("out_color").unwrap().as_ptr());
         }
         self.vertex_shader.link_to_program(self, vd);
+        self.fragment_shader.link_to_program(self, vd);
     }
 
     pub fn close(&self) {
@@ -81,6 +83,8 @@ impl GLShaderEnum {
 pub struct Shader {
     addr: GLuint,
     var_name: &'static str,
+    stride: gl::types::GLsizei,
+    offset: usize,
 }
 
 impl Shader {
@@ -117,6 +121,8 @@ impl Shader {
         return Shader {
             addr: shader,
             var_name: shader_source.var_name,
+            stride: shader_source.stride,
+            offset: shader_source.offset,
         };
     }
 
@@ -124,13 +130,13 @@ impl Shader {
     pub fn link_to_program(&self, program: &Program, vd: &vertex::VertexBuffers) {
         unsafe {
             // Specify the layout of the vertex data
-            let pos_attr = gl::GetAttribLocation(program.addr,
-                                                 CString::new(self.var_name).unwrap().as_ptr());
-            gl::EnableVertexAttribArray(pos_attr as GLuint);
-            gl::VertexAttribPointer(pos_attr as GLuint, 3, gl::FLOAT,
+            let attr = gl::GetAttribLocation(program.addr,
+                                             CString::new(self.var_name).unwrap().as_ptr());
+            gl::EnableVertexAttribArray(attr as GLuint);
+            gl::VertexAttribPointer(attr as GLuint, self.stride, gl::FLOAT,
                                     gl::FALSE as GLboolean,
                                     ((vd.vertex_width as GLsizei) * (mem::size_of::<GLfloat>() as GLsizei)) as i32,
-                                    ptr::null());
+                                    (self.offset * mem::size_of::<GLfloat>()) as *const _);
         }
     }
 
@@ -144,26 +150,36 @@ impl Shader {
 pub struct ShaderSource {
     pub source_glsl: &'static str,
     pub var_name: &'static str,
+    pub stride: gl::types::GLsizei,
+    pub offset: usize,
 }
 
 const VS_SRC: &'static str = r#"#version 150
     in vec2 position;
+    in vec3 color;
+    out vec3 attr_color;
     void main() {
+       attr_color = color;
        gl_Position = vec4(position, 0.0, 1.0);
     }"#;
 
 pub const SIMPLE_VERTEX_SOURCE: ShaderSource = ShaderSource {
     source_glsl: VS_SRC,
     var_name: "position",
+    stride: 2,
+    offset: 0,
 };
 
 const FS_SRC: &'static str = r#"#version 150
+    in vec3 attr_color;
     out vec4 out_color;
     void main() {
-       out_color = vec4(1.0, 1.0, 1.0, 1.0);
+       out_color = vec4(attr_color, 1.0);
     }"#;
 
 pub const SIMPLE_FRAGMENT_SOURCE: ShaderSource = ShaderSource {
     source_glsl: FS_SRC,
-    var_name: "out_color",
+    var_name: "color",
+    stride: 3,
+    offset: 2,
 };
