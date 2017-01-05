@@ -1,24 +1,25 @@
 extern crate mandelbrot;
 
-use std::error;
 use std::env;
+use std::error;
+use std::fmt;
 use std::path;
 
 #[derive(Debug)]
 struct ArgError {}
 
-impl std::fmt::Display for ArgError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl fmt::Display for ArgError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "mandelbrotviewer requires a filename to read frame from")
     }
 }
 
-impl std::error::Error for ArgError {
+impl error::Error for ArgError {
     fn description(&self) -> &str {
         return "must supply the filename to read the frame from";
     }
 
-    fn cause(&self) -> Option<&std::error::Error> {
+    fn cause(&self) -> Option<&error::Error> {
         return None;
     }
 }
@@ -26,18 +27,18 @@ impl std::error::Error for ArgError {
 #[derive(Debug)]
 struct FilepathParsingError {}
 
-impl std::fmt::Display for FilepathParsingError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl fmt::Display for FilepathParsingError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "unexpected error parsing the filepath")
     }
 }
 
-impl std::error::Error for FilepathParsingError {
+impl error::Error for FilepathParsingError {
     fn description(&self) -> &str {
         return "could not split filepath as expected";
     }
 
-    fn cause(&self) -> Option<&std::error::Error> {
+    fn cause(&self) -> Option<&error::Error> {
         return None;
     }
 }

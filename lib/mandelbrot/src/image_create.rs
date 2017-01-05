@@ -1,11 +1,11 @@
 extern crate image;
 
+use std::error;
 use std::fs;
 use std::path;
-use std::error;
 
-use eq;
 use color_calc;
+use eq;
 
 pub fn gen_png(frame: Frame, iterations: u32) -> image::RgbaImage {
     let mut imagebuf: image::RgbaImage = image::ImageBuffer::new(frame.screen_width,

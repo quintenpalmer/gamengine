@@ -1,13 +1,13 @@
-extern crate glutin;
 extern crate gl;
+extern crate glutin;
 
-use std::ptr;
 use std::error;
+use std::ptr;
 
-use window;
 use shader;
 use shader_source;
 use vertex;
+use window;
 
 pub struct App {
     pub window: window::Window,
@@ -74,13 +74,13 @@ impl Renderer {
                                                   shader::GLShaderEnum::FragmentShader);
         let program = shader::Program::new(vertex_shader, fragment_shader);
 
-        let vertex_data = vertex::VertexBuffers::new(p_src.vertex_width);
+        let vertex_buffers = vertex::VertexBuffers::new(p_src.vertex_width);
 
-        program.define_vertex_attribute_layout(&vertex_data, p_src.all_vertex_attrs);
+        program.define_vertex_attribute_layout(&vertex_buffers, p_src.all_vertex_attrs);
 
         return Renderer {
             program: program,
-            vertices: vertex_data,
+            vertices: vertex_buffers,
         };
     }
 
