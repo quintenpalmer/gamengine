@@ -3,7 +3,8 @@ extern crate csv;
 
 extern crate types;
 
-mod rectsource;
+mod shapesource;
 
-pub use rectsource::RectSource;
-pub use rectsource::parse_rect_source;
+pub use shapesource::ShapeSource;
+pub use shapesource::ShapeType;
+pub use shapesource::parse_shape_source;

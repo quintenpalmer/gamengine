@@ -1,2 +1,2 @@
-x,y,width,height,x_func,y_func,x_scale,y_scale,x_cycle_size,y_cycle_size,x_offset,y_offset,red,green,blue
-0.0,0.0,0.5,0.5,lin,par,1.0,1.0,100,100,0,0,0,255,255
+shape,x,y,width,height,x_func,y_func,x_scale,y_scale,x_cycle_size,y_cycle_size,x_offset,y_offset,red,green,blue
+rect,0.0,0.0,0.5,0.5,lin,par,1.0,1.0,100,100,0,0,0,255,255
