@@ -1,0 +1,2 @@
+screen_width,screen_height,x_min,x_max,y_min,y_max,iterations
+900,720,-1.875,-1.725,-0.078125,0.078125,1000
