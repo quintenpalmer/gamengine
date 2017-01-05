@@ -2,6 +2,7 @@ extern crate glutin;
 extern crate gl;
 
 use std::ptr;
+use std::fmt;
 use std::error;
 
 use window;
@@ -59,8 +60,43 @@ impl App {
         return Ok(());
     }
 
+    pub fn update_rect(&mut self,
+                       index: usize,
+                       x_offset: f32,
+                       y_offset: f32)
+                       -> Result<(), Box<error::Error>> {
+        let o_rect = self.vertices.rects.get_mut(index);
+        match o_rect {
+            Some(rect) => {
+                rect.update_offset(x_offset, y_offset);
+                return Ok(());
+            }
+            None => return Err(Box::new(OutOfBoundsError {})),
+        }
+    }
+
     pub fn close(&self) {
         self.vertices.close();
         self.program.close();
+    }
+}
+
+#[derive(Debug)]
+struct OutOfBoundsError {
+}
+
+impl fmt::Display for OutOfBoundsError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "out of bounds error")
+    }
+}
+
+impl error::Error for OutOfBoundsError {
+    fn description(&self) -> &str {
+        return "request to index outside bounds of vector";
+    }
+
+    fn cause(&self) -> Option<&error::Error> {
+        return None;
     }
 }

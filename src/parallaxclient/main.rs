@@ -1,5 +1,6 @@
 extern crate graphics;
 extern crate fileformat;
+extern crate types;
 
 #[derive(Debug)]
 struct ArgError {}
@@ -47,18 +48,37 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
                                        rect_source.width,
                                        rect_source.height));
     }
-    let app = try!(graphics::App::new(600,
-                                      600,
-                                      "Parallax Client Demo",
-                                      graphics::SIMPLE_VERTEX_SOURCE,
-                                      graphics::SIMPLE_FRAGMENT_SOURCE,
-                                      rects));
+    let mut app = try!(graphics::App::new(600,
+                                          600,
+                                          "Parallax Client Demo",
+                                          graphics::SIMPLE_VERTEX_SOURCE,
+                                          graphics::SIMPLE_FRAGMENT_SOURCE,
+                                          rects));
+    let mut iteration = 0;
     loop {
         try!(app.draw());
+
+        for x in 0..rect_sources.len() {
+            let ref s = rect_sources[x];
+
+            let new_x = operate(s.x_func, iteration, s.x_cycle_size);
+            let new_y = operate(s.y_func, iteration, s.y_cycle_size);
+
+            try!(app.update_rect(x, new_x, new_y));
+        }
+
         if app.window.handle_events() {
             break;
         }
+        iteration += 1;
     }
     app.close();
     return Ok(());
+}
+
+pub fn operate(func: types::MathFunc, iteration: u16, u_cycle_size: u16) -> f32 {
+    let cycle_size = f32::from(u_cycle_size);
+    let tick = f32::from(iteration) % cycle_size;
+
+    return func.plot_with_max(tick, cycle_size);
 }
