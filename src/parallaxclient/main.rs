@@ -2,8 +2,8 @@ extern crate graphics;
 
 fn main() {
     println!("hello from a client");
-    let rects = vec![graphics::Rect::new(0.2, 0.6, 0.0, 0.0),
-                     graphics::Rect::new(0.6, 0.2, 0.0, 0.0)];
+    let rects = vec![graphics::Rect::new(0.0, 0.0, 0.2, 0.6),
+                     graphics::Rect::new(0.0, 0.0, 0.6, 0.2)];
     let r_app = graphics::App::new(600,
                                    600,
                                    "Parallax Client Demo",
@@ -11,7 +11,7 @@ fn main() {
                                    graphics::SIMPLE_FRAGMENT_SOURCE,
                                    rects);
     match r_app {
-        Ok(mut app) => {
+        Ok(app) => {
             loop {
                 match app.draw() {
                     Ok(_) => {}

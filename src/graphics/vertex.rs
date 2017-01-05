@@ -26,7 +26,7 @@ struct VertexSpecification {
 }
 
 impl Rect {
-    pub fn new(width: f32, height: f32, xloc: f32, yloc: f32) -> Rect {
+    pub fn new(xloc: f32, yloc: f32, width: f32, height: f32) -> Rect {
         return Rect {
             x: xloc,
             y: yloc,
@@ -84,7 +84,7 @@ impl VertexBuffers {
             gl::GenBuffers(1, &mut ebo);
         }
 
-        let mut v = VertexBuffers {
+        let v = VertexBuffers {
             vao: vao,
             vbo: vbo,
             ebo: ebo,
@@ -96,7 +96,7 @@ impl VertexBuffers {
         return v;
     }
 
-    pub fn gen_vertex_buffers(&mut self) -> GLsizei {
+    fn full_vertex_spec(&self) -> VertexSpecification {
         let mut vertices = vec::Vec::new();
         let mut elements = vec::Vec::new();
         let mut vertex_count_offset = 0;
@@ -110,6 +110,18 @@ impl VertexBuffers {
 
             vertex_count_offset += vertex_count;
         }
+
+        return VertexSpecification {
+            vertices: vertices,
+            elements: elements,
+        };
+    }
+
+    pub fn gen_vertex_buffers(&self) -> GLsizei {
+        let vertex_spec = self.full_vertex_spec();
+        let vertices = vertex_spec.vertices;
+        let elements = vertex_spec.elements;
+
         let elem_count = elements.len() as GLsizei;
 
         unsafe {

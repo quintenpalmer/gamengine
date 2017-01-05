@@ -43,7 +43,7 @@ impl App {
         });
     }
 
-    pub fn draw(&mut self) -> Result<(), glutin::ContextError> {
+    pub fn draw(&self) -> Result<(), glutin::ContextError> {
         // build and copy the vertex data
         let element_count = self.vertices.gen_vertex_buffers();
         unsafe {
@@ -59,7 +59,7 @@ impl App {
         return Ok(());
     }
 
-    pub fn close(&mut self) {
+    pub fn close(&self) {
         self.vertices.close();
         self.program.close();
     }
