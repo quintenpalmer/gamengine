@@ -43,3 +43,10 @@ Example Scene
 
 
 ![Mountain Scene](docs/eg-mountain-scene.png "Mountain")
+
+
+Mandelbrot Demo
+---------------
+
+
+![Mandelbrot Screenshot](docs/mandelbrot-explore.png "Mandelbrot")
