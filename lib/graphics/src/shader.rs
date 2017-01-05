@@ -8,6 +8,7 @@ use std::ffi::CString;
 use gl::types::*;
 
 use vertex;
+use shader_source;
 
 pub struct Program {
     addr: GLuint,
@@ -48,13 +49,32 @@ impl Program {
         }
     }
 
-    pub fn link_vertex(&self, vd: &vertex::VertexBuffers) {
+    pub fn define_vertex_attribute_layout(&self,
+                                          vd: &vertex::VertexBuffers,
+                                          vertex_attrs: Vec<shader_source::VertexAttribute>) {
         unsafe {
             gl::UseProgram(self.addr);
             gl::BindFragDataLocation(self.addr, 0, CString::new("out_color").unwrap().as_ptr());
         }
-        self.vertex_shader.link_to_program(self, vd);
-        self.fragment_shader.link_to_program(self, vd);
+        for vertex_attr in vertex_attrs.iter() {
+
+            self.define_single_vertex_attribute(vd, vertex_attr);
+        }
+    }
+
+    pub fn define_single_vertex_attribute(&self,
+                                          vd: &vertex::VertexBuffers,
+                                          vertex_attr: &shader_source::VertexAttribute) {
+        unsafe {
+            // Specify the layout of the vertex data
+            let attr = gl::GetAttribLocation(self.addr,
+                                             CString::new(vertex_attr.var_name).unwrap().as_ptr());
+            gl::EnableVertexAttribArray(attr as GLuint);
+            gl::VertexAttribPointer(attr as GLuint, vertex_attr.stride, gl::FLOAT,
+                                    gl::FALSE as GLboolean,
+                                    ((vd.vertex_width as GLsizei) * (mem::size_of::<GLfloat>() as GLsizei)) as i32,
+                                    (vertex_attr.offset * mem::size_of::<GLfloat>()) as *const _);
+        }
     }
 
     pub fn close(&self) {
@@ -82,14 +102,10 @@ impl GLShaderEnum {
 
 pub struct Shader {
     addr: GLuint,
-    var_name: &'static str,
-    stride: gl::types::GLsizei,
-    offset: usize,
 }
 
 impl Shader {
-    pub fn new(shader_source: ShaderSource, shader_ty: GLShaderEnum) -> Shader {
-        let src = shader_source.source_glsl;
+    pub fn new(src: &'static str, shader_ty: GLShaderEnum) -> Shader {
         let ty = shader_ty.to_glenum();
         let shader;
         unsafe {
@@ -118,26 +134,7 @@ impl Shader {
                        str::from_utf8(&buf).ok().expect("ShaderInfoLog not valid utf8"));
             }
         }
-        return Shader {
-            addr: shader,
-            var_name: shader_source.var_name,
-            stride: shader_source.stride,
-            offset: shader_source.offset,
-        };
-    }
-
-
-    pub fn link_to_program(&self, program: &Program, vd: &vertex::VertexBuffers) {
-        unsafe {
-            // Specify the layout of the vertex data
-            let attr = gl::GetAttribLocation(program.addr,
-                                             CString::new(self.var_name).unwrap().as_ptr());
-            gl::EnableVertexAttribArray(attr as GLuint);
-            gl::VertexAttribPointer(attr as GLuint, self.stride, gl::FLOAT,
-                                    gl::FALSE as GLboolean,
-                                    ((vd.vertex_width as GLsizei) * (mem::size_of::<GLfloat>() as GLsizei)) as i32,
-                                    (self.offset * mem::size_of::<GLfloat>()) as *const _);
-        }
+        return Shader { addr: shader };
     }
 
     pub fn close(&self) {
@@ -146,40 +143,3 @@ impl Shader {
         }
     }
 }
-
-pub struct ShaderSource {
-    pub source_glsl: &'static str,
-    pub var_name: &'static str,
-    pub stride: gl::types::GLsizei,
-    pub offset: usize,
-}
-
-const VS_SRC: &'static str = r#"#version 150
-    in vec2 position;
-    in vec3 color;
-    out vec3 attr_color;
-    void main() {
-       attr_color = color;
-       gl_Position = vec4(position, 0.0, 1.0);
-    }"#;
-
-pub const SIMPLE_VERTEX_SOURCE: ShaderSource = ShaderSource {
-    source_glsl: VS_SRC,
-    var_name: "position",
-    stride: 2,
-    offset: 0,
-};
-
-const FS_SRC: &'static str = r#"#version 150
-    in vec3 attr_color;
-    out vec4 out_color;
-    void main() {
-       out_color = vec4(attr_color, 1.0);
-    }"#;
-
-pub const SIMPLE_FRAGMENT_SOURCE: ShaderSource = ShaderSource {
-    source_glsl: FS_SRC,
-    var_name: "color",
-    stride: 3,
-    offset: 2,
-};

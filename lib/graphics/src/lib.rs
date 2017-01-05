@@ -5,6 +5,7 @@ mod app;
 mod window;
 mod vertex;
 mod shader;
+mod shader_source;
 mod shapes;
 
 pub use app::App;
