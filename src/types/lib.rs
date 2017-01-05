@@ -7,6 +7,7 @@ use rustc_serialize::Decoder;
 pub enum MathFunc {
     Linear,
     Parabolic,
+    Sin,
 }
 
 impl Decodable for MathFunc {
@@ -15,6 +16,7 @@ impl Decodable for MathFunc {
         match s.as_str() {
             "lin" => Ok(MathFunc::Linear),
             "par" => Ok(MathFunc::Parabolic),
+            "sin" => Ok(MathFunc::Sin),
             _ => Err(d.error("invalid math function")),
         }
     }
@@ -25,6 +27,7 @@ impl MathFunc {
         match self {
             &MathFunc::Linear => x,
             &MathFunc::Parabolic => x.powi(2),
+            &MathFunc::Sin => x.sin(),
         }
     }
 
@@ -36,6 +39,7 @@ impl MathFunc {
                 let non_minimized = -((x - half_max).powi(2)) + half_max.powi(2);
                 non_minimized / half_max.powi(2)
             }
+            &MathFunc::Sin => ((x / max) * std::f32::consts::PI * 2.0).sin() / 2.5,
         }
     }
 }

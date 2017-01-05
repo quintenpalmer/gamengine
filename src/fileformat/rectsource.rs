@@ -11,8 +11,12 @@ pub struct RectSource {
     pub height: f32,
     pub x_func: types::MathFunc,
     pub y_func: types::MathFunc,
+    pub x_scale: f32,
+    pub y_scale: f32,
     pub x_cycle_size: u16,
     pub y_cycle_size: u16,
+    pub x_offset: u16,
+    pub y_offset: u16,
 }
 
 pub fn parse_rect_source(filename: &str) -> Result<Vec<RectSource>, csv::Error> {
