@@ -1,5 +1,5 @@
 [package]
-name = "plotlib"
+name = "sceneplotlib"
 version = "0.0.1"
 authors = ["Quinten Palmer <quintenpalmer@gmail.com>"]
 
