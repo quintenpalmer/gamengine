@@ -1,5 +1,3 @@
-extern crate num;
-
 use num::rational::Ratio;
 
 pub struct SimpleColor {

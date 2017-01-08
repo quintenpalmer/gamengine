@@ -1,5 +1,4 @@
-extern crate csv;
-extern crate rustc_serialize;
+use csv;
 
 use std::error;
 use std::fmt;

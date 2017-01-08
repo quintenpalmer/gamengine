@@ -1,5 +1,3 @@
-extern crate rustc_serialize;
-
 use rustc_serialize::Decodable;
 use rustc_serialize::Decoder;
 

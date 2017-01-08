@@ -1,5 +1,3 @@
-extern crate num;
-
 use num::complex::Complex64;
 
 pub fn mandelbrot_divergence(x: f64, y: f64, iterations: u32) -> Result<(), u32> {

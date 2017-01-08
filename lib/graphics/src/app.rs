@@ -1,5 +1,5 @@
-extern crate gl;
-extern crate glutin;
+use gl;
+use glutin;
 
 use std::error;
 use std::ptr;
