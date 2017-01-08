@@ -1,5 +1,5 @@
-extern crate mandelbrot;
 extern crate graphics;
+extern crate mandelbrot;
 
 use std::env;
 use std::error;

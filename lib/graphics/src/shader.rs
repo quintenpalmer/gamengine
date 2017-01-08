@@ -1,4 +1,4 @@
-extern crate gl;
+use gl;
 
 use std::ffi::CString;
 use std::ptr;

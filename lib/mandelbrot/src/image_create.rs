@@ -1,4 +1,4 @@
-extern crate image;
+use image;
 
 use std::error;
 use std::fs;

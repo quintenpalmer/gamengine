@@ -1,10 +1,8 @@
-extern crate csv;
-extern crate rustc_serialize;
-
-use types;
-
+use csv;
 use rustc_serialize::Decodable;
 use rustc_serialize::Decoder;
+
+use types;
 
 pub enum ShapeType {
     Rect,
