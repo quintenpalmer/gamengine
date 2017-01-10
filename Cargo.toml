@@ -1,9 +1,9 @@
 [workspace]
 members = [
   "lib/graphics/",
-  "lib/sceneplotlib/",
   "lib/mandelbrot/",
-  "programs/sceneplot",
+  "lib/sceneplotlib/",
   "programs/mandlebrotviewer",
+  "programs/sceneplot",
 ]
 
