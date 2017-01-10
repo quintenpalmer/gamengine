@@ -5,6 +5,11 @@ pub struct Window {
     window: glutin::Window,
 }
 
+pub enum Action {
+    Resized(u32, u32),
+    Closed,
+}
+
 impl Window {
     pub fn new<T: Into<String>>(width: u32,
                                 height: u32,
@@ -34,16 +39,22 @@ impl Window {
         return self.window.swap_buffers();
     }
 
-    pub fn handle_events(&self) -> bool {
+    pub fn handle_events(&self) -> Option<Action> {
         for ev in self.window.poll_events() {
             match ev {
-                glutin::Event::Closed => return true,
+                glutin::Event::Closed => return Some(Action::Closed),
                 glutin::Event::KeyboardInput(glutin::ElementState::Released,
                                              _,
-                                             Some(glutin::VirtualKeyCode::Q)) => return true,
+                                             Some(glutin::VirtualKeyCode::Q)) => {
+                    return Some(Action::Closed)
+                }
+                glutin::Event::Resized(w, h) => {
+                    println!("I'm resizing");
+                    return Some(Action::Resized(w, h));
+                }
                 _ => (),
             }
         }
-        return false;
+        return None;
     }
 }

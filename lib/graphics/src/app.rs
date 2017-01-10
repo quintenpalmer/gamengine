@@ -58,7 +58,7 @@ impl App {
         return Ok(());
     }
 
-    pub fn handle_events(&self) -> bool {
+    pub fn handle_events(&self) -> Option<window::Action> {
         return self.window.handle_events();
     }
 

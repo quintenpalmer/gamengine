@@ -85,9 +85,12 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
             rects[i].update_offset(new_x, new_y);
         }
 
-        if app.handle_events() {
-            break;
+        match app.handle_events() {
+            Some(graphics::Action::Closed) => break,
+            Some(_) => (),
+            None => (),
         }
+
         iteration += 1;
 
         try!(app.draw(&rects));

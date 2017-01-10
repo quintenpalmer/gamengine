@@ -132,8 +132,10 @@ fn explore_mandelbrot() -> Result<(), Box<error::Error>> {
         vec![Box::new(graphics::TexRect::new(-1.0, 1.0, -1.0, 1.0))];
 
     loop {
-        if app.handle_events() {
-            break;
+        match app.handle_events() {
+            Some(graphics::Action::Closed) => break,
+            Some(_) => (),
+            None => (),
         }
 
         try!(app.draw(&rects));

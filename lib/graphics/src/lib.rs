@@ -24,3 +24,4 @@ pub use vertex::Vertex;
 pub use vertex::ColorVertex;
 pub use vertex::TextureVertex;
 pub use vertex::ElementTriangle;
+pub use window::Action;
