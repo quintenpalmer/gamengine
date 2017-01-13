@@ -97,52 +97,6 @@ fn gen_photo(filename: &str) -> Result<(), Box<error::Error>> {
 
 }
 
-
-
-
-struct TexRect { }
-
-impl graphics::VertexSpecable for TexRect {
-    fn get_vertex_specification(&self) -> graphics::VertexSpecification {
-        return graphics::VertexSpecification {
-            vertices: vec![Box::new(graphics::TextureVertex {
-                               x: -1.0,
-                               y: 1.0,
-                               tex_x: 0.0,
-                               tex_y: 0.0,
-                           }), // Top-left
-                           Box::new(graphics::TextureVertex {
-                               x: 1.0,
-                               y: 1.0,
-                               tex_x: 1.0,
-                               tex_y: 0.0,
-                           }), // Top-right
-                           Box::new(graphics::TextureVertex {
-                               x: 1.0,
-                               y: -1.0,
-                               tex_x: 1.0,
-                               tex_y: 1.0,
-                           }), // Bottom-right
-                           Box::new(graphics::TextureVertex {
-                               x: -1.0,
-                               y: -1.0,
-                               tex_x: 0.0,
-                               tex_y: 1.0,
-                           }) /* Bottom-left */],
-            elements: vec![graphics::ElementTriangle {
-                               p1: 0,
-                               p2: 1,
-                               p3: 2,
-                           },
-                           graphics::ElementTriangle {
-                               p1: 2,
-                               p2: 3,
-                               p3: 0,
-                           }],
-        };
-    }
-}
-
 fn build_mandelbrot_tex_def() -> graphics::TextureSetupDefinition {
     let width: u32 = 900;
     let height: u32 = 720;
@@ -174,7 +128,8 @@ fn explore_mandelbrot() -> Result<(), Box<error::Error>> {
                                       graphics::RenderingSource::TextureRenderingSource {
                                           tex_def: mandelbrot_tex_def,
                                       }));
-    let rects: Vec<Box<graphics::VertexSpecable>> = vec![Box::new(TexRect {})];
+    let rects: Vec<Box<graphics::VertexSpecable>> =
+        vec![Box::new(graphics::TexRect::new(-1.0, 1.0, -1.0, 1.0))];
 
     loop {
         if app.handle_events() {
