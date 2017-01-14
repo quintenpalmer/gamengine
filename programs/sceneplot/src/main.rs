@@ -70,10 +70,10 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
         }
     }
 
-    let app = try!(graphics::App::new(600,
-                                      600,
-                                      "Parallax Client Demo",
-                                      graphics::RenderingSource::ColorRenderingSource));
+    let mut app = try!(graphics::App::new(600,
+                                          600,
+                                          "Parallax Client Demo",
+                                          graphics::RenderingSource::ColorRenderingSource));
     let mut iteration = 0;
     loop {
         for i in 0..shape_sources.len() {
@@ -93,7 +93,7 @@ fn run_app() -> Result<(), Box<std::error::Error>> {
 
         iteration += 1;
 
-        try!(app.draw(&rects));
+        app.draw(&rects);
     }
     app.close();
     return Ok(());

@@ -1,8 +1,16 @@
 use gl;
-use glutin;
+use glfw;
+
+use glfw::Context;
+
+use std::sync::mpsc;
+
+use gerror;
 
 pub struct Window {
-    window: glutin::Window,
+    inner_glfw: glfw::Glfw,
+    window: glfw::Window,
+    event_rec: mpsc::Receiver<(f64, glfw::WindowEvent)>,
 }
 
 pub enum Action {
@@ -11,46 +19,54 @@ pub enum Action {
 }
 
 impl Window {
-    pub fn new<T: Into<String>>(width: u32,
-                                height: u32,
-                                title: T)
-                                -> Result<Window, glutin::CreationError> {
+    pub fn new(width: u32, height: u32, title: &str) -> Result<Window, gerror::Error> {
 
-        let window = try!(glutin::WindowBuilder::new()
-            .with_dimensions(width, height)
-            .with_title(title)
-            .with_vsync()
-            .build());
+        let mut inner_glfw = try!(glfw::init(glfw::FAIL_ON_ERRORS).map_err(gerror::new_init_error));
 
-        return Ok(Window { window: window });
+        inner_glfw.window_hint(glfw::WindowHint::ContextVersion(3, 2));
+        inner_glfw.window_hint(glfw::WindowHint::OpenGlForwardCompat(true));
+        inner_glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
+
+        let (window, events) =
+            try!(inner_glfw.create_window(width, height, title, glfw::WindowMode::Windowed)
+                .ok_or(gerror::Error::WindowCreationError(gerror::GLFWError::GLFWFromOption)));
+
+        return Ok(Window {
+            inner_glfw: inner_glfw,
+            window: window,
+            event_rec: events,
+        });
     }
 
-    pub fn make_main(&self) -> Result<(), glutin::ContextError> {
+    pub fn make_main(&mut self) {
         // It is essential to make the context current before calling `gl::load_with`.
-        unsafe { try!(self.window.make_current()) };
+        self.window.make_current();
+
+        self.inner_glfw.set_swap_interval(glfw::SwapInterval::Adaptive);
+
+        // register this window as the callback for key polling
+        self.window.set_all_polling(true);
 
         // Load the OpenGL function pointers
-        // TODO: `as *const _` will not be needed once glutin is updated to the latest gl version
         gl::load_with(|symbol| self.window.get_proc_address(symbol) as *const _);
-        return Ok(());
     }
 
-    pub fn swap_buffers(&self) -> Result<(), glutin::ContextError> {
-        return self.window.swap_buffers();
+    pub fn swap_buffers(&mut self) {
+        self.window.swap_buffers();
     }
 
-    pub fn handle_events(&self) -> Option<Action> {
-        for ev in self.window.poll_events() {
-            match ev {
-                glutin::Event::Closed => return Some(Action::Closed),
-                glutin::Event::KeyboardInput(glutin::ElementState::Released,
-                                             _,
-                                             Some(glutin::VirtualKeyCode::Q)) => {
+    pub fn handle_events(&mut self) -> Option<Action> {
+        self.inner_glfw.poll_events();
+        for (_, event) in glfw::flush_messages(&self.event_rec) {
+            println!("an event");
+            match event {
+                glfw::WindowEvent::Close => return Some(Action::Closed),
+                glfw::WindowEvent::Key(glfw::Key::Q, _, glfw::Action::Release, _) => {
                     return Some(Action::Closed)
                 }
-                glutin::Event::Resized(w, h) => {
+                glfw::WindowEvent::Size(w, h) => {
                     println!("I'm resizing");
-                    return Some(Action::Resized(w, h));
+                    return Some(Action::Resized(w as u32, h as u32));
                 }
                 _ => (),
             }
