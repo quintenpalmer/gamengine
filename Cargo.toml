@@ -3,6 +3,7 @@ members = [
   "lib/graphics/",
   "lib/mandelbrot/",
   "lib/sceneplotlib/",
+  "programs/imgview",
   "programs/mandlebrotviewer",
   "programs/sceneplot",
 ]
