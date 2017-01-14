@@ -122,21 +122,23 @@ fn build_mandelbrot_tex_def() -> graphics::TextureSetupDefinition {
 
 fn explore_mandelbrot() -> Result<(), Box<error::Error>> {
     let mandelbrot_tex_def = build_mandelbrot_tex_def();
-    let app = try!(graphics::App::new(900,
-                                      720,
-                                      "Parallax Client Demo",
-                                      graphics::RenderingSource::TextureRenderingSource {
-                                          tex_def: mandelbrot_tex_def,
-                                      }));
+    let mut app = try!(graphics::App::new(900,
+                                          720,
+                                          "Parallax Client Demo",
+                                          graphics::RenderingSource::TextureRenderingSource {
+                                              tex_def: mandelbrot_tex_def,
+                                          }));
     let rects: Vec<Box<graphics::VertexSpecable>> =
         vec![Box::new(graphics::TexRect::new(-1.0, 1.0, -1.0, 1.0))];
 
     loop {
-        if app.handle_events() {
-            break;
+        match app.handle_events() {
+            Some(graphics::Action::Closed) => break,
+            Some(_) => (),
+            None => (),
         }
 
-        try!(app.draw(&rects));
+        app.draw(&rects);
     }
     app.close();
     return Ok(());

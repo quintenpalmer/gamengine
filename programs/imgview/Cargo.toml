@@ -1,0 +1,9 @@
+[package]
+name = "imgview"
+version = "0.1.0"
+authors = ["Quinten Palmer <quintenpalmer@gmail.com>"]
+
+[dependencies]
+graphics = {path = "../../lib/graphics"}
+image = "0.10"
+num = "0.1"

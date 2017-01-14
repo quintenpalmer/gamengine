@@ -1,5 +1,4 @@
 use gl;
-use glutin;
 
 use std::error;
 use std::ptr;
@@ -16,15 +15,15 @@ pub struct App {
 }
 
 impl App {
-    pub fn new<T: Into<String>>(width: u32,
-                                height: u32,
-                                title: T,
-                                source: RenderingSource)
-                                -> Result<App, Box<error::Error>> {
+    pub fn new(width: u32,
+               height: u32,
+               title: &str,
+               source: RenderingSource)
+               -> Result<App, Box<error::Error>> {
 
-        let window = try!(window::Window::new(width, height, title));
+        let mut window = try!(window::Window::new(width, height, title));
 
-        try!(window.make_main());
+        window.make_main();
 
         let renderer = match source {
             RenderingSource::ColorRenderingSource => {
@@ -43,9 +42,7 @@ impl App {
         });
     }
 
-    pub fn draw<V: vertex::VertexSpecable + ?Sized>(&self,
-                                                    rects: &Vec<Box<V>>)
-                                                    -> Result<(), glutin::ContextError> {
+    pub fn draw<V: vertex::VertexSpecable + ?Sized>(&mut self, rects: &Vec<Box<V>>) {
         unsafe {
             // Clear the screen to red
             gl::ClearColor(0.9, 0.1, 0.2, 1.0);
@@ -54,11 +51,10 @@ impl App {
 
         self.renderer.draw(rects);
 
-        try!(self.window.swap_buffers());
-        return Ok(());
+        self.window.swap_buffers();
     }
 
-    pub fn handle_events(&self) -> bool {
+    pub fn handle_events(&mut self) -> Option<window::Action> {
         return self.window.handle_events();
     }
 

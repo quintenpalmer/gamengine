@@ -1,7 +1,8 @@
 extern crate gl;
-extern crate glutin;
+extern crate glfw;
 
 mod app;
+mod gerror;
 mod program;
 mod shader;
 mod shader_source;
@@ -24,3 +25,4 @@ pub use vertex::Vertex;
 pub use vertex::ColorVertex;
 pub use vertex::TextureVertex;
 pub use vertex::ElementTriangle;
+pub use window::Action;
