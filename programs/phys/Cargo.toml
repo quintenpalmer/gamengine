@@ -1,0 +1,7 @@
+[package]
+name = "phys"
+version = "0.1.0"
+authors = ["Quinten Palmer <quintenpalmer@gmail.com>"]
+
+[dependencies]
+siunits = {path = "../../lib/siunits"}

@@ -3,8 +3,9 @@ members = [
   "lib/graphics/",
   "lib/mandelbrot/",
   "lib/sceneplotlib/",
+  "lib/siunits/",
   "programs/imgview",
   "programs/mandlebrotviewer",
   "programs/sceneplot",
+  "programs/phys",
 ]
-

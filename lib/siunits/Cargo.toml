@@ -1,0 +1,8 @@
+[package]
+name = "siunits"
+version = "0.1.0"
+authors = ["Quinten Palmer <quintenpalmer@gmail.com>"]
+
+[dependencies]
+num = "0.1"
+tylar = "0.2"
