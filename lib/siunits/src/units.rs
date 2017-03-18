@@ -3,6 +3,8 @@ use tylar;
 use std::fmt;
 use std::marker::PhantomData;
 
+use tylar::{Succ, Zero, Pred};
+
 pub trait TypeLevelZero {}
 pub trait TypeLevelAdd<RHS> {
     type Out;
@@ -171,4 +173,88 @@ impl<M1, S1, G1, A1, K1, O1, C1, M2, S2, G2, A2, K2, O2, C2> TypeLevelDiv<SIUnit
           C2: tylar::NumType
 {
     type Out = SIUnit<M1::Out, S1::Out, G1::Out, A1::Out, K1::Out, O1::Out, C1::Out>;
+}
+
+pub fn constant() -> SIUnit<Zero, Zero, Zero, Zero, Zero, Zero, Zero> {
+    SIUnit {
+        meter: PhantomData,
+        second: PhantomData,
+        gram: PhantomData,
+        ampere: PhantomData,
+        kelvin: PhantomData,
+        mole: PhantomData,
+        candela: PhantomData,
+    }
+}
+
+pub fn meters() -> SIUnit<Succ<Zero>, Zero, Zero, Zero, Zero, Zero, Zero> {
+    SIUnit {
+        meter: PhantomData,
+        second: PhantomData,
+        gram: PhantomData,
+        ampere: PhantomData,
+        kelvin: PhantomData,
+        mole: PhantomData,
+        candela: PhantomData,
+    }
+}
+
+pub fn hertz() -> SIUnit<Zero, Pred<Zero>, Zero, Zero, Zero, Zero, Zero> {
+    SIUnit {
+        meter: PhantomData,
+        second: PhantomData,
+        gram: PhantomData,
+        ampere: PhantomData,
+        kelvin: PhantomData,
+        mole: PhantomData,
+        candela: PhantomData,
+    }
+}
+
+pub fn seconds() -> SIUnit<Zero, Succ<Zero>, Zero, Zero, Zero, Zero, Zero> {
+    SIUnit {
+        meter: PhantomData,
+        second: PhantomData,
+        gram: PhantomData,
+        ampere: PhantomData,
+        kelvin: PhantomData,
+        mole: PhantomData,
+        candela: PhantomData,
+    }
+}
+
+pub fn grams() -> SIUnit<Zero, Zero, Succ<Zero>, Zero, Zero, Zero, Zero> {
+    SIUnit {
+        meter: PhantomData,
+        second: PhantomData,
+        gram: PhantomData,
+        ampere: PhantomData,
+        kelvin: PhantomData,
+        mole: PhantomData,
+        candela: PhantomData,
+    }
+}
+
+pub fn velocity() -> SIUnit<Succ<Zero>, Pred<Zero>, Zero, Zero, Zero, Zero, Zero> {
+    SIUnit {
+        meter: PhantomData,
+        second: PhantomData,
+        gram: PhantomData,
+        ampere: PhantomData,
+        kelvin: PhantomData,
+        mole: PhantomData,
+        candela: PhantomData,
+    }
+}
+
+pub fn acceleration() -> SIUnit<Succ<Zero>, Pred<Pred<Zero>>, Zero, Zero, Zero, Zero, Zero> {
+    SIUnit {
+        meter: PhantomData,
+        second: PhantomData,
+        gram: PhantomData,
+        ampere: PhantomData,
+        kelvin: PhantomData,
+        mole: PhantomData,
+        candela: PhantomData,
+    }
 }

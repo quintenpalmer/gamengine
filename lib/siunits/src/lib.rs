@@ -1,10 +1,11 @@
 extern crate num;
 extern crate tylar;
 
-mod units;
+pub mod units;
 mod measurement;
 
 pub use units::SIUnit;
+
 pub use measurement::Measurement;
 pub use measurement::meters;
 pub use measurement::seconds;
